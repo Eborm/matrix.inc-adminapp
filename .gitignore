@@ -229,7 +229,9 @@ project.lock.json
 
 # Output folder used by Webpack or other FE stuff
 **/node_modules/*
-**/lib/*
+**/jquery/*
+**/jquery-validation/*
+**/jquery-validation-unobtrusive/*
 
 # SpecFlow specific
 *.feature.cs
