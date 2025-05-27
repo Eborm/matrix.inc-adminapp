@@ -7,6 +7,17 @@
 # or wget:
 # wget --no-check-certificate http://gist.githubusercontent.com/kmorcinek/2710267/raw/.gitignore
 
+#DataAccessLayer debug and stuff
+/DataAccessLayer/bin/Debug
+/DataAccessLayer/obj
+/KE03_INTDEV_SE_2_Base/bin/Debug/net8.0
+/KE03_INTDEV_SE_2_Base/obj
+/KE03_INTDEV_SE_2_Base/MatrixInc.db
+/KE03_INTDEV_SE_2_Base/MatrixInc.db-shm
+/KE03_INTDEV_SE_2_Base/MatrixInc.db-wal
+/.vs
+
+
 .venv
 src/main.spec
 main.spec
