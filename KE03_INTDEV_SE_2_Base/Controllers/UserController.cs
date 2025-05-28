@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using KE03_INTDEV_SE_2_Base.Models;
+using DataAccessLayer.Models;
 
 namespace KE03_INTDEV_SE_2_Base.Controllers
 {
@@ -20,7 +21,7 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         // POST: UserController/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(UserModel model)
+        public IActionResult Login(User model)
         {
             if (ModelState.IsValid)
             {

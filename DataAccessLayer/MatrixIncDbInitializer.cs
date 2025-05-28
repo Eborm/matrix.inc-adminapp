@@ -55,6 +55,10 @@ namespace DataAccessLayer
             };
             context.Parts.AddRange(parts);
 
+            var Users = new User { UserName = "Admin", Password = "admin    " };
+
+            context.Users.AddRange(Users);
+
             context.SaveChanges();
 
             context.Database.EnsureCreated();
