@@ -40,7 +40,7 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(UserModel model)
+        public IActionResult Create(User model)
         {
             if (ModelState.IsValid)
             {
@@ -54,7 +54,7 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         // Stub methods — add logic as needed
         public IActionResult Edit(int id) => View();
         [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, UserModel model) => RedirectToAction(nameof(Index));
+        public IActionResult Edit(int id, User model) => RedirectToAction(nameof(Index));
 
         public IActionResult Delete(int id) => View();
         [HttpPost, ValidateAntiForgeryToken]
