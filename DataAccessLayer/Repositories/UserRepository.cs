@@ -19,24 +19,48 @@ namespace DataAccessLayer.Repositories
             _context = context;
         }
 
-        public User GetUserByname(string UserName)
+        public User GetUserByUID(int UID)
         {
-            return null;
+            return _context.Users
+                .FirstOrDefault(u => u.Id == UID)
+                ?? throw new KeyNotFoundException($"User with ID {UID} not found.");
         }
+
 
         public void AddUser(User user)
         {
+            _context.Users.Add(user);
+            _context.SaveChanges();
 
         }
 
         public void UpdateUser(User user)
         {
+            _context.Users.Update(user);
+            _context.SaveChanges();
 
         }
 
         public void DeleteUser(User user)
         {
+            _context.Users.Remove(user);
+            _context.SaveChanges();
+        }
 
+        public IEnumerable<User> GetAllUsers()
+        {
+            return _context.Users;
+        }
+
+        public void UpdateUserPermissions(int userId, string permissions)
+        {
+            var user = _context.Users.Find(userId);
+            if (user == null)
+            {
+                throw new KeyNotFoundException($"User with ID {userId} not found.");
+            }
+            user.Permissions = permissions;
+            _context.SaveChanges();
         }
     }
 }

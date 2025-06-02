@@ -9,12 +9,16 @@ namespace DataAccessLayer.Interfaces
 {
     internal interface IUserRepository
     {
-        public User GetUserByname(string UserName);
+        public User GetUserByUID(int UID);
 
         public void AddUser(User user);
 
         public void UpdateUser(User user);
 
         public void DeleteUser(User user);
+
+        public IEnumerable<User> GetAllUsers();
+
+        public void UpdateUserPermissions(int userId, string permissions);
     }
 }
