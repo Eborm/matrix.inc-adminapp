@@ -70,14 +70,16 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(User model)
         {
-            if (ModelState.IsValid)
+            User user = new User
             {
-                // Handle creation logic
-                return RedirectToAction(nameof(Index));
-            }
-
-            return View(model);
+                UserName = model.UserName,
+                Password = "password", //Stock password
+                Permissions = model.Permissions 
+            };
+            _UserRepository.AddUser(user);
+            return RedirectToAction("Index", "Home");
         }
+
 
         // Stub methods — add logic as needed
         public IActionResult Edit(int id) => View();
