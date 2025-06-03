@@ -59,6 +59,10 @@
     <h2>Actieve Klanten</h2>
     <canvas id="activeUsersChart"></canvas>
   </div>
+  <div class="chart-box">
+    <h2>Actieve Korting</h2>
+    <canvas id="activeDiscountChart"></canvas>
+  </div>
 </div>
 
 <script>
@@ -88,7 +92,7 @@
     });
   }
 
-  async function loadActiveUsersChart() {
+  async function LoadActiveUsersChart() {
     const response = await fetch('/api/stats/active-users');
     const data = await response.json();
 
@@ -105,7 +109,40 @@
           backgroundColor: 'rgba(255, 99, 132, 0.5)',
           borderColor: 'rgba(255, 99, 132, 1)',
           borderWidth: 1,
-          // Smallere staaf
+          barPercentage: 0.3,
+          categoryPercentage: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            precision: 0
+          }
+        }
+      }
+    });
+  }
+
+  async function LoadActiveDiscount() {
+    const response = await fetch('/api/stats/check-discount');
+    const data = await response.json();
+
+    const discounted = data.products.filter(p => p.hasDiscount === true);
+    const count = discounted.length;
+
+    const ctx = document.getElementById('activeDiscountChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Actieve kortingen'],
+        datasets: [{
+          label: 'Aantal',
+          data: [count],
+          backgroundColor: 'rgba(255, 99, 132, 0.5)',
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 1,
           barPercentage: 0.3,
           categoryPercentage: 0.3
         }]
@@ -123,7 +160,8 @@
   }
 
   LoadOrdersPerMonth();
-  loadActiveUsersChart();
+  LoadActiveUsersChart();
+  LoadActiveDiscount();
 </script>
 
 </body>

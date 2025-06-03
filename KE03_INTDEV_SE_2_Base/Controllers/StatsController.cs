@@ -1,5 +1,6 @@
 using DataAccessLayer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
 namespace KE03_INTDEV_SE_2_Base.Controllers;
@@ -34,5 +35,39 @@ public class StatsController : ControllerBase
         
         return Ok(data);
     }
+    
+    [HttpGet("check-discount")]
+    public async Task<ActionResult<IEnumerable<object>>> CheckDiscount()
+    {
+        try
+        {
+            var data = await _context.Products
+                .Select(p => new 
+                {
+                    ProductId = p.Id,
+                    ProductName = p.Name,
+                    OrderCount = p.Orders.Count,
+                    Price = p.Price,
+                    HasDiscount = p.Discount > 0
+                })
+                .OrderByDescending(x => x.OrderCount)
+                .Take(10)
+                .ToListAsync();
 
+            if (!data.Any())
+            {
+                return NotFound("Geen producten gevonden");
+            }
+
+            return Ok(new
+            {
+                Message = "Let op: Er zijn nog geen orders geregistreerd voor deze producten",
+                Products = data
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "Er is een fout opgetreden bij het ophalen van de top producten");
+        }
+    }
 }
