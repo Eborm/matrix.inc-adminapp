@@ -14,6 +14,8 @@ namespace DataAccessLayer
         public DbSet<Product> Products { get; set; }
         public DbSet<Part> Parts { get; set; }
 
+        public DbSet<User> Users { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Customer>()
@@ -33,6 +35,8 @@ namespace DataAccessLayer
             modelBuilder.Entity<Part>()
                 .HasMany(p => p.Products)
                 .WithMany(p => p.Parts);
+
+            modelBuilder.Entity<User>();
 
             base.OnModelCreating(modelBuilder);
         }
