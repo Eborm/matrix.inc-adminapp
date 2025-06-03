@@ -29,7 +29,7 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
             if (user != null)
             {
                 _logger.LogInformation($"User {user.UserName} accessed the index page.");
-                return View(user);
+                return RedirectToAction("settings");
             }
             else
             {
@@ -111,6 +111,38 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
             else
             {
                 return NotFound();
+            }
+        }
+
+        public IActionResult settings()
+        {
+            return View();
+        }
+        [HttpPost, ValidateAntiForgeryToken]
+        public IActionResult Settings(Userupdate userupdate)
+        {
+            int Id = HttpContext.Session.GetObjectFromJson<int>("User_id");
+            if (Id != 0)
+            {
+                User user = _UserRepository.GetUserByUID(Id);
+                if (user != null)
+                {
+                    if (user.Password == userupdate.Password)
+                    {
+                        user.Password = userupdate.Password_new;
+                        _UserRepository.UpdateUser(user);
+                    }
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    _logger.LogWarning($"User with ID {Id} not found for settings.");
+                    return RedirectToAction("Login");
+                }
+            }
+            else
+            {
+                return View();
             }
         }
     }

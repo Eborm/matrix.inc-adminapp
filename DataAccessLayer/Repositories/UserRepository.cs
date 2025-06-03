@@ -79,5 +79,6 @@ namespace DataAccessLayer.Repositories
             user.Permissions = permissions;
             _context.SaveChanges();
         }
+
     }
 }
