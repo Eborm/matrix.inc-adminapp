@@ -55,8 +55,15 @@ namespace DataAccessLayer
             };
             context.Parts.AddRange(parts);
 
-            var Users = new User { UserName = "Admin", Password = "admin", Permissions="4" };
+            var logs = new Log[]
+            {
+                new Log { Action = "Edit Product", Time = DateTime.Now, City = "Utrecht", User = "Admin01"},
+                new Log { Action = "Delete Product", Time = DateTime.Now, City = "Maastricht", User = "Admin02" },
+                new Log { Action = "Create Product", Time = DateTime.Now, City = "Rotterdam", User = "Admin02" },
+            };
+            context.Logs.AddRange(logs);
 
+            var Users = new User { UserName = "Admin", Password = "admin", Permissions="4" };
             context.Users.AddRange(Users);
 
             context.SaveChanges();
