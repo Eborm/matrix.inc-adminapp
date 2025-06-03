@@ -20,8 +20,21 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         }
         public IActionResult Index()
         {
-
-            return RedirectToAction("Login");
+            int Id = HttpContext.Session.GetObjectFromJson<int>("User_id");
+            User user = null;
+            if (Id != 0)
+            {
+                user = _UserRepository.GetUserByUID(Id);
+            }
+            if (user != null)
+            {
+                _logger.LogInformation($"User {user.UserName} accessed the index page.");
+                return View(user);
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
         }
 
         // GET: UserController/Login
