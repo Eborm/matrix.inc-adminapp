@@ -52,13 +52,21 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
                 User user = _UserRepository.GetUserByUserName(model.UserName);
             if (user != null)
             {
-                user.Password = model.Password; // This should be hashed in a real application
-                HttpContext.Session.SetObjectAsJson("User_id", user.Id);
-                _logger.LogInformation($"User {user.UserName} logged in successfully.");
-                return RedirectToAction("Index", "Home");
+                if (user.Password == model.Password) // In a real application, you should hash the password and compare hashes
+                {
+                    HttpContext.Session.SetObjectAsJson("User_id", user.Id);
+                    _logger.LogInformation($"User {user.UserName} logged in successfully.");
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Invalid username or password.");
+                    _logger.LogWarning($"Failed login attempt for user {model.UserName}.");
+                    return View();
+                }
             }
-
             return View();
+
         }
 
         public IActionResult Create()
@@ -86,8 +94,24 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public IActionResult Edit(int id, User model) => RedirectToAction(nameof(Index));
 
-        public IActionResult Delete(int id) => View();
+        public IActionResult Delete()
+        {
+            return View();
+        }
         [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult Delete(int id, IFormCollection collection) => RedirectToAction(nameof(Index));
+        public IActionResult Delete(User model)
+        {
+            User user = _UserRepository.GetUserByUserName(model.UserName);
+            if (user != null)
+            {
+                _UserRepository.DeleteUser(user);
+                _logger.LogInformation($"User {user.UserName} deleted successfully.");
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
     }
 }

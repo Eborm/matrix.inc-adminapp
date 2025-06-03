@@ -21,16 +21,27 @@ namespace DataAccessLayer.Repositories
 
         public User GetUserByUID(int UID)
         {
-            return _context.Users
-                .FirstOrDefault(u => u.Id == UID)
-                ?? throw new KeyNotFoundException($"User with ID {UID} not found.");
+            try
+            {
+                return _context.Users
+                    .FirstOrDefault(u => u.Id == UID)
+                    ?? throw new KeyNotFoundException($"User with ID {UID} not found.");
+            }
+            catch
+            {
+                return null;
+            }
         }
         
         public User GetUserByUserName(string userName)
         {
-            return _context.Users
-                .FirstOrDefault(u => u.UserName == userName)
-                ?? throw new KeyNotFoundException($"User with username {userName} not found.");
+            try
+            {
+                return _context.Users
+                    .FirstOrDefault(u => u.UserName == userName)
+                    ?? throw new KeyNotFoundException($"User with username {userName} not found.");
+            }
+            catch { return null; }
         }
 
         public void AddUser(User user)
