@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Repositories
 {
-    internal class UserRepository : IUserRepository
+    public class UserRepository : IUserRepository
     {
         private readonly MatrixIncDbContext _context;
 
@@ -25,7 +25,13 @@ namespace DataAccessLayer.Repositories
                 .FirstOrDefault(u => u.Id == UID)
                 ?? throw new KeyNotFoundException($"User with ID {UID} not found.");
         }
-
+        
+        public User GetUserByUserName(string userName)
+        {
+            return _context.Users
+                .FirstOrDefault(u => u.UserName == userName)
+                ?? throw new KeyNotFoundException($"User with username {userName} not found.");
+        }
 
         public void AddUser(User user)
         {

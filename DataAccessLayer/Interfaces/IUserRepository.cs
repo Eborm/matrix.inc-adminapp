@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Interfaces
 {
-    internal interface IUserRepository
+    public interface IUserRepository
     {
         public User GetUserByUID(int UID);
+
+        public User GetUserByUserName(string userName);
 
         public void AddUser(User user);
 

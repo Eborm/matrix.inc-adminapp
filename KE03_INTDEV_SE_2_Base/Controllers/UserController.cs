@@ -1,13 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using KE03_INTDEV_SE_2_Base.Models;
+using DataAccessLayer.Interfaces;
 using DataAccessLayer.Models;
+using KE03_INTDEV_SE_2_Base.Models;
+using DataAccessLayer.Repositories;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using KE03_INTDEV_SE_2_Base.Controllers;
 
 namespace KE03_INTDEV_SE_2_Base.Controllers
 {
     public class UserController : Controller
     {
+        private readonly ILogger<UserController> _logger;
+        private readonly IUserRepository _UserRepository;
+
+        public UserController(IUserRepository userRepository, ILogger<UserController> logger)
+        {
+            _logger = logger;
+            _UserRepository = userRepository;
+        }
         public IActionResult Index()
         {
+
             return RedirectToAction("Login");
         }
 
@@ -23,10 +36,12 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Login(User model)
         {
-            if (ModelState.IsValid)
+                User user = _UserRepository.GetUserByUserName(model.UserName);
+            if (user != null)
             {
-                // TODO: Validate user credentials
-
+                user.Password = model.Password; // This should be hashed in a real application
+                HttpContext.Session.SetObjectAsJson("User_id", user.Id);
+                _logger.LogInformation($"User {user.UserName} logged in successfully.");
                 return RedirectToAction("Index", "Home");
             }
 
