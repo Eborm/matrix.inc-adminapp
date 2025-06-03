@@ -11,12 +11,10 @@ namespace DataAccessLayer.Interfaces
     {
         public IEnumerable<Log> GetAllLogs();
 
-        public Log? GetLogByUID(int uid);
+        public IEnumerable<Log>? GetLogByID(int id);
 
-        public void AddCustomer(Log log);
+        public void AddLog(Log log);
 
-        public Log? GetLogByUserName(string userName);
-
-        public Log? GetLogByAction(string action);
+        public IEnumerable<Log>? GetLogByAction(string action);
     }
 }
