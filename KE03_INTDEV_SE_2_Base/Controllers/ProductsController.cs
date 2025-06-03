@@ -105,10 +105,27 @@ public class ProductsController : Controller
         }
         return View(product);
     }
-    
+
+    public async Task<IActionResult> Delete(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
+        }
+
+        var customer = _productRepository.GetProductById(id.Value);
+        if (customer == null)
+        {
+            return NotFound();
+        }
+
+        return View(customer);
+    }
+
+
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id)
+    public async Task<IActionResult> Delete(int id)
     {
         var product = _productRepository.GetProductById(id);
         if (product != null)
