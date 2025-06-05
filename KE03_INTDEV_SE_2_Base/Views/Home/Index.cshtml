@@ -1,5 +1,5 @@
 ﻿@{
-  ViewData["Title"] = "Home Page";
+ViewData["Title"] = "Home Page";
 }
 
 <!DOCTYPE html>
@@ -40,9 +40,24 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
+    .info-box {
+      flex: 1 1 400px;
+      margin: 13px;
+      max-width: 500px;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      font-size: 18px;
+    }
+
     canvas {
       width: 100% !important;
       height: auto !important;
+    }
+
+    strong {
+      color: #333;
     }
   </style>
 </head>
@@ -55,13 +70,17 @@
     <h2>Orders per Maand</h2>
     <canvas id="ordersChart"></canvas>
   </div>
-  <div class="chart-box">
-    <h2>Actieve Klanten</h2>
-    <canvas id="activeUsersChart"></canvas>
-  </div>
-  <div class="chart-box">
-    <h2>Actieve Korting</h2>
-    <canvas id="activeDiscountChart"></canvas>
+
+  <div class="info-container">
+    <div class="info-box">
+      <h2>Actieve Klanten</h2>
+      <p>Er zijn momenteel <strong id="activeUsersCount">...</strong> actieve klanten.</p>
+    </div>
+
+    <div class="info-box">
+      <h2>Actieve Kortingen</h2>
+      <p>Er zijn momenteel <strong id="activeDiscountCount">...</strong> producten met een actieve korting.</p>
+    </div>
   </div>
 </div>
 
@@ -92,76 +111,22 @@
     });
   }
 
-  async function LoadActiveUsersChart() {
+  async function LoadActiveUsersCount() {
     const response = await fetch('/api/stats/active-users');
     const data = await response.json();
-
-    const count = data.length;
-
-    const ctx = document.getElementById('activeUsersChart').getContext('2d');
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['Actieve klanten'],
-        datasets: [{
-          label: 'Aantal',
-          data: [count],
-          backgroundColor: 'rgba(255, 99, 132, 0.5)',
-          borderColor: 'rgba(255, 99, 132, 1)',
-          borderWidth: 1,
-          barPercentage: 0.3,
-          categoryPercentage: 0.3
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true,
-            precision: 0
-          }
-        }
-      }
-    });
+    document.getElementById('activeUsersCount').innerText = data.length;
   }
 
-  async function LoadActiveDiscount() {
+  async function LoadActiveDiscountCount() {
     const response = await fetch('/api/stats/check-discount');
     const data = await response.json();
-
     const discounted = data.products.filter(p => p.hasDiscount === true);
-    const count = discounted.length;
-
-    const ctx = document.getElementById('activeDiscountChart').getContext('2d');
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['Actieve kortingen'],
-        datasets: [{
-          label: 'Aantal',
-          data: [count],
-          backgroundColor: 'rgba(255, 99, 132, 0.5)',
-          borderColor: 'rgba(255, 99, 132, 1)',
-          borderWidth: 1,
-          barPercentage: 0.3,
-          categoryPercentage: 0.3
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true,
-            precision: 0
-          }
-        }
-      }
-    });
+    document.getElementById('activeDiscountCount').innerText = discounted.length;
   }
 
   LoadOrdersPerMonth();
-  LoadActiveUsersChart();
-  LoadActiveDiscount();
+  LoadActiveUsersCount();
+  LoadActiveDiscountCount();
 </script>
 
 </body>

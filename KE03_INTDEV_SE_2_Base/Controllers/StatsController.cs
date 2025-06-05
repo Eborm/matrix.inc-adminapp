@@ -61,7 +61,7 @@ public class StatsController : ControllerBase
 
             return Ok(new
             {
-                Message = "Let op: Er zijn nog geen orders geregistreerd voor deze producten",
+                Message = "Er zijn nog geen orders geregistreerd voor deze producten",
                 Products = data
             });
         }
