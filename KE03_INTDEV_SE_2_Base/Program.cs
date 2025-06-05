@@ -31,6 +31,7 @@ namespace KE03_INTDEV_SE_2_Base
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IPartRepository, PartRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<ILogsRepository, LogsRepository>();
             builder.Services.AddHttpContextAccessor();
 
             var app = builder.Build();

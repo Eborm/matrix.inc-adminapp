@@ -13,7 +13,7 @@ namespace DataAccessLayer.Interfaces
 
         public IEnumerable<Log>? GetLogByID(int id);
 
-        public void AddLog(Log log);
+        public Task AddLog(Log log);
 
         public IEnumerable<Log>? GetLogByAction(string action);
     }

@@ -33,9 +33,9 @@ public class LogsRepository : ILogsRepository
         return _context.Logs.AsEnumerable().Where(log => log.Id == id);
     }
 
-    public void AddLog(Log log)
+    public async Task AddLog(Log log)
     {
-        log.City = GetCityByIP().ToString();
+        log.City = await GetCityByIP();
         
         _context.Logs.Add(log);
         _context.SaveChanges();
@@ -66,6 +66,8 @@ public class LogsRepository : ILogsRepository
 
             // Haal de gewenste gegevens op
             string city = data.city;
+            Console.WriteLine(city);
+            
             
             return city;
         }
