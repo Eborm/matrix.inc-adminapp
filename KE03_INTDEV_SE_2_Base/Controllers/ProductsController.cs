@@ -18,7 +18,7 @@ public class ProductsController : Controller
     private readonly ILogger<ProductsController> _logger;
     private readonly IProductRepository _productRepository;
     private readonly ILogsRepository _logsRepository;
-    private readonly IUserRepository _userRepository;
+    private readonly IUserRepository _UserRepository;
 
     public ProductsController(MatrixIncDbContext context, ILogger<ProductsController> logger, IProductRepository productRepository, ILogsRepository logsRepository, IUserRepository UserRepository)
     {
@@ -26,13 +26,25 @@ public class ProductsController : Controller
         _productRepository = productRepository;
         _context = context;
         _logsRepository = logsRepository;
-        _userRepository = UserRepository;
+        _UserRepository = UserRepository;
     }
     
     public async Task<IActionResult> Index()
     {
-        return View(_productRepository.GetAllProducts());
-    }
+        int Id = HttpContext.Session.GetObjectFromJson<int>("User_id");
+        User user = null;
+        if (Id != 0)
+        {
+            user = _UserRepository.GetUserByUID(Id);
+        }
+        if (user != null && user.Permissions <= 2)
+        {
+            return View(_productRepository.GetAllProducts());
+        }
+        else
+        {
+            return RedirectToPage("/User/Login");
+        }
 
 
     public async Task<IActionResult> Details(int? id)
@@ -64,7 +76,7 @@ public class ProductsController : Controller
         _productRepository.AddProduct(product);
         
         int UID = HttpContext.Session.GetObjectFromJson<int>("User_id");
-        string username = _userRepository.GetUserByUID(UID).UserName;
+        string username = _UserRepository.GetUserByUID(UID).UserName;
         
         var log = new Log()
         {
@@ -111,7 +123,7 @@ public class ProductsController : Controller
                 _productRepository.UpdateProduct(product);
                 
                 int UID = HttpContext.Session.GetObjectFromJson<int>("User_id");
-                string username = _userRepository.GetUserByUID(UID).UserName;
+                string username = _UserRepository.GetUserByUID(UID).UserName;
         
                 var log = new Log()
                 {
@@ -163,7 +175,7 @@ public class ProductsController : Controller
         if (product != null)
         {
             int UID = HttpContext.Session.GetObjectFromJson<int>("User_id");
-            string username = _userRepository.GetUserByUID(UID).UserName;
+            string username = _UserRepository.GetUserByUID(UID).UserName;
         
             var log = new Log()
             {

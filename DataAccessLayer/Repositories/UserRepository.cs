@@ -70,7 +70,7 @@ namespace DataAccessLayer.Repositories
             return _context.Users;
         }
 
-        public void UpdateUserPermissions(int userId, string permissions)
+        public void UpdateUserPermissions(int userId, int permissions)
         {
             var user = _context.Users.Find(userId);
             if (user == null)

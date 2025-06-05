@@ -27,7 +27,7 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
             {
                 user = _UserRepository.GetUserByUID(Id);
             }
-            if (user != null)
+            if (user != null && user.Permissions == 0)
             {
                 _logger.LogInformation($"User {user.UserName} accessed the index page.");
                 return RedirectToAction("settings");

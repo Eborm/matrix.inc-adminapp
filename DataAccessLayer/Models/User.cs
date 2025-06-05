@@ -20,6 +20,6 @@ namespace DataAccessLayer.Models
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        public string Permissions { get; set; }
+        public int Permissions { get; set; }
     }
 }

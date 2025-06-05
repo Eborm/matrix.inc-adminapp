@@ -15,20 +15,35 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
     public class CustomersController : Controller
     {
         private readonly MatrixIncDbContext _context;
-        private readonly IUserRepository _userRepository;
+        private readonly IUserRepository _UserRepository;
         private readonly ILogsRepository _logsRepository;
+        private readonly ILogger<CustomersController> _logger;
 
-        public CustomersController(MatrixIncDbContext context, IUserRepository UserRepository, ILogsRepository LogsRepository)
+        public CustomersController(MatrixIncDbContext context, ILogger<CustomersController> logger, IUserRepository UserRepository, ILogsRepository LogsRepository)
         {
             _context = context;
-            _userRepository = UserRepository;
+            _UserRepository = UserRepository;
             _logsRepository = LogsRepository;
+            _logger = logger;
         }
 
         // GET: Customers
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Customers.ToListAsync());
+            int Id = HttpContext.Session.GetObjectFromJson<int>("User_id");
+            User user = null;
+            if (Id != 0)
+            {
+                user = _UserRepository.GetUserByUID(Id);
+            }
+            if (user != null && user.Permissions <= 2)
+            {
+                return View(await _context.Customers.ToListAsync());
+            }
+            else
+            {
+                return RedirectToPage("/User/Login");
+            }
         }
 
         // GET: Customers/Details/5
@@ -68,7 +83,7 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
                 await _context.SaveChangesAsync();
                 
                 int UID = HttpContext.Session.GetObjectFromJson<int>("User_id");
-                string username = _userRepository.GetUserByUID(UID).UserName;
+                string username = _UserRepository.GetUserByUID(UID).UserName;
         
                 var log = new Log()
                 {
@@ -121,7 +136,7 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
                     await _context.SaveChangesAsync();
                     
                     int UID = HttpContext.Session.GetObjectFromJson<int>("User_id");
-                    string username = _userRepository.GetUserByUID(UID).UserName;
+                    string username = _UserRepository.GetUserByUID(UID).UserName;
         
                     var log = new Log()
                     {
@@ -176,7 +191,7 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
             if (customer != null)
             {
                 int UID = HttpContext.Session.GetObjectFromJson<int>("User_id");
-                string username = _userRepository.GetUserByUID(UID).UserName;
+                string username = _UserRepository.GetUserByUID(UID).UserName;
         
                 var log = new Log()
                 {
