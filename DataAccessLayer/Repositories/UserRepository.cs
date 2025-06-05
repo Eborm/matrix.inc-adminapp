@@ -7,6 +7,7 @@ using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 
 namespace DataAccessLayer.Repositories
 {
@@ -80,5 +81,22 @@ namespace DataAccessLayer.Repositories
             _context.SaveChanges();
         }
 
+        public string EncryptPassword(string password)
+        {
+            byte[] bytepassword = System.Text.Encoding.UTF8.GetBytes(password);
+            byte[] fixedSalt = Encoding.UTF8.GetBytes("YourFixedSaltValue1");
+            var passwordBytes = new Rfc2898DeriveBytes(password, fixedSalt, 100000);
+            Aes encryptor = Aes.Create();
+            encryptor.Key = passwordBytes.GetBytes(32);
+            encryptor.IV = passwordBytes.GetBytes(16);
+            using(MemoryStream ms = new MemoryStream())
+            {
+                using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateEncryptor(), CryptoStreamMode.Write))
+                {
+                    cs.Write(bytepassword, 0, bytepassword.Length);
+                }
+                return Convert.ToBase64String(ms.ToArray());
+            }
+        }
     }
 }

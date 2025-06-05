@@ -22,5 +22,7 @@ namespace DataAccessLayer.Interfaces
         public IEnumerable<User> GetAllUsers();
 
         public void UpdateUserPermissions(int userId, string permissions);
+
+        public string EncryptPassword(string password);
     }
 }

@@ -49,10 +49,11 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Login(User model)
         {
-                User user = _UserRepository.GetUserByUserName(model.UserName);
+            User user = _UserRepository.GetUserByUserName(model.UserName);
             if (user != null)
             {
-                if (user.Password == model.Password) // In a real application, you should hash the password and compare hashes
+                _logger.LogInformation(_UserRepository.EncryptPassword(model.Password));
+                if (user.Password == _UserRepository.EncryptPassword(model.Password))
                 {
                     HttpContext.Session.SetObjectAsJson("User_id", user.Id);
                     _logger.LogInformation($"User {user.UserName} logged in successfully.");
@@ -81,7 +82,7 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
             User user = new User
             {
                 UserName = model.UserName,
-                Password = "password", //Stock password
+                Password = _UserRepository.EncryptPassword("password"), //Stock password
                 Permissions = model.Permissions 
             };
             _UserRepository.AddUser(user);
@@ -127,9 +128,9 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
                 User user = _UserRepository.GetUserByUID(Id);
                 if (user != null)
                 {
-                    if (user.Password == userupdate.Password)
+                    if (user.Password == _UserRepository.EncryptPassword(userupdate.Password))
                     {
-                        user.Password = userupdate.Password_new;
+                        user.Password = _UserRepository.EncryptPassword(userupdate.Password_new);
                         _UserRepository.UpdateUser(user);
                     }
                     return RedirectToAction("Index", "Home");
