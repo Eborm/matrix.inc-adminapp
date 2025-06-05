@@ -188,7 +188,7 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction(panel);
+            return RedirectToAction("panel");
         }
 
     }
