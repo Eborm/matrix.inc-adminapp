@@ -93,7 +93,7 @@ public class ProductsController : Controller
         
         await _logsRepository.AddLog(log);
         
-        return View(product);
+        return RedirectToAction(nameof(Index));
     }
     
     public async Task<IActionResult> Edit(int? id)
