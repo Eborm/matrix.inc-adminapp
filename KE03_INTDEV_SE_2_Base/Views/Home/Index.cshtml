@@ -67,19 +67,19 @@ ViewData["Title"] = "Home Page";
 
 <div class="chart-container">
   <div class="chart-box">
-    <h2>Orders per Maand</h2>
+    <h2>Orders per month</h2>
     <canvas id="ordersChart"></canvas>
   </div>
 
   <div class="info-container">
     <div class="info-box">
-      <h2>Actieve Klanten</h2>
-      <p>Er zijn momenteel <strong id="activeUsersCount">...</strong> actieve klanten.</p>
+      <h2>active customers</h2>
+      <p>Currently there are <strong id="activeUsersCount">...</strong> active customers.</p>
     </div>
 
     <div class="info-box">
-      <h2>Actieve Kortingen</h2>
-      <p>Er zijn momenteel <strong id="activeDiscountCount">...</strong> producten met een actieve korting.</p>
+      <h2>Active Discounts</h2>
+      <p>Currently there are <strong id="activeDiscountCount">...</strong> products with an active discount.</p>
     </div>
   </div>
 </div>
@@ -91,7 +91,7 @@ ViewData["Title"] = "Home Page";
 
     const labels = data.map(item => {
       const date = new Date(item.year, item.month - 1);
-      return date.toLocaleString("nl-NL", { month: "long", year: "numeric" });
+      return date.toLocaleString("en-EN", { month: "long", year: "numeric" });
     });
 
     const counts = data.map(item => item.count);
@@ -101,7 +101,7 @@ ViewData["Title"] = "Home Page";
       data: {
         labels: labels,
         datasets: [{
-          label: "Aantal orders",
+          label: "Order amount",
           data: counts,
           fill: false,
           borderColor: "blue",
