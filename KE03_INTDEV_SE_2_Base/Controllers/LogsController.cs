@@ -31,9 +31,13 @@ public class LogsController : Controller
         {
             return View(_logsRepository.GetAllLogs());
         }
+        else if (user != null)
+        {
+            return Redirect("/Home/Index");
+        }
         else
         {
-            return RedirectToPage("/User/Login");
+            return Redirect("/User/Login");
         }
     }
 }

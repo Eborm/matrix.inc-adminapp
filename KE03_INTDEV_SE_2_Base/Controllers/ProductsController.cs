@@ -28,7 +28,7 @@ public class ProductsController : Controller
         _logsRepository = logsRepository;
         _UserRepository = UserRepository;
     }
-    
+
     public async Task<IActionResult> Index()
     {
         int Id = HttpContext.Session.GetObjectFromJson<int>("User_id");
@@ -41,10 +41,15 @@ public class ProductsController : Controller
         {
             return View(_productRepository.GetAllProducts());
         }
+        else if (user != null)
+        {
+            return Redirect("/Home/Index");
+        }
         else
         {
-            return RedirectToPage("/User/Login");
+            return Redirect("/User/Login");
         }
+    }
 
 
     public async Task<IActionResult> Details(int? id)

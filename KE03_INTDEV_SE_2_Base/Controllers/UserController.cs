@@ -27,14 +27,18 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
             {
                 user = _UserRepository.GetUserByUID(Id);
             }
-            if (user != null && user.Permissions == 0)
+            if (user != null)
             {
                 _logger.LogInformation($"User {user.UserName} accessed the index page.");
                 return RedirectToAction("settings");
             }
+            else if (user != null)
+            {
+                return Redirect("/Home/Index");
+            }
             else
             {
-                return RedirectToAction("Login");
+                return Redirect("/User/Login");
             }
         }
 
@@ -144,7 +148,25 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         }
         public IActionResult panel()
         {
-            return View(_UserRepository.GetAllUsers());
+            int Id = HttpContext.Session.GetObjectFromJson<int>("User_id");
+            User user = null;
+            if (Id != 0)
+            {
+                user = _UserRepository.GetUserByUID(Id);
+            }
+            if (user != null && user.Permissions == 0)
+            {
+                _logger.LogInformation($"User {user.UserName} accessed the index page.");
+                return View(_UserRepository.GetAllUsers());
+            }
+            else if (user != null)
+            {
+                return Redirect("/Home/Index");
+            }
+            else
+            {
+                return Redirect("/User/Login");
+            }
         }
         public async Task<IActionResult> Edit(int? id)
         {

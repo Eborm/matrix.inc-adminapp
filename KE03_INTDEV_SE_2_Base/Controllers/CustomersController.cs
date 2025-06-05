@@ -40,9 +40,13 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
             {
                 return View(await _context.Customers.ToListAsync());
             }
+            else if (user != null)
+            {
+                return Redirect("/Home/Index");
+            }
             else
             {
-                return RedirectToPage("/User/Login");
+                return Redirect("/User/Login");
             }
         }
 
