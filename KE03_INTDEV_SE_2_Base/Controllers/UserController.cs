@@ -13,11 +13,13 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
     {
         private readonly ILogger<UserController> _logger;
         private readonly IUserRepository _UserRepository;
+        private readonly ILogsRepository _LogsRepository;
 
-        public UserController(IUserRepository userRepository, ILogger<UserController> logger)
+        public UserController(IUserRepository userRepository, ILogger<UserController> logger, ILogsRepository LogsRepository)
         {
             _logger = logger;
             _UserRepository = userRepository;
+            _LogsRepository = LogsRepository;
         }
         public IActionResult Index()
         {
@@ -52,7 +54,7 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         // POST: UserController/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(User model)
+        public async Task<IActionResult> Login(User model)
         {
             User user = _UserRepository.GetUserByUserName(model.UserName);
             if (user != null)
@@ -82,8 +84,19 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(User model)
+        public async Task<IActionResult> Create(User model)
         {
+            string username = model.UserName;
+        
+            var log = new Log()
+            {
+                Action = "Add User",
+                User = username,
+                Time = DateTime.Now,
+                City = "could not be found"
+            };
+        
+            await _LogsRepository.AddLog(log);
             User user = new User
             {
                 UserName = model.UserName,
@@ -100,11 +113,23 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
             return View(user);
         }
         [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult Delete(User model)
+        public async Task<IActionResult> Delete(User model)
         {
             User user = _UserRepository.GetUserByUserName(model.UserName);
             if (user != null)
             {
+                int UID = HttpContext.Session.GetObjectFromJson<int>("User_id");
+                string username = _UserRepository.GetUserByUID(UID).UserName;
+        
+                var log = new Log()
+                {
+                    Action = "Delete User",
+                    User = username,
+                    Time = DateTime.Now,
+                    City = "could not be found"
+                };
+        
+                await _LogsRepository.AddLog(log);
                 _UserRepository.DeleteUser(user);
                 _logger.LogInformation($"User {user.UserName} deleted successfully.");
                 return RedirectToAction("Index", "Home");
@@ -196,6 +221,18 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
             }
             try
             {
+                int UID = HttpContext.Session.GetObjectFromJson<int>("User_id");
+                string username = _UserRepository.GetUserByUID(UID).UserName;
+        
+                var log = new Log()
+                {
+                    Action = "Edit User",
+                    User = username,
+                    Time = DateTime.Now,
+                    City = "could not be found"
+                };
+        
+                await _LogsRepository.AddLog(log);
                 _UserRepository.UpdateUser(new_user);
             }
             catch (DbUpdateConcurrencyException)
