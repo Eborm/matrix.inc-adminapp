@@ -73,13 +73,13 @@ ViewData["Title"] = "Home Page";
 
   <div class="info-container">
     <div class="info-box">
-      <h2>active customers</h2>
-      <p>Currently there are <strong id="activeUsersCount">...</strong> active customers.</p>
+      <h2>Active Customers</h2>
+      <p id="activeUsersText">...</p>
     </div>
 
     <div class="info-box">
       <h2>Active Discounts</h2>
-      <p>Currently there are <strong id="activeDiscountCount">...</strong> products with an active discount.</p>
+      <p id="activeDiscountText">...</p>
     </div>
   </div>
 </div>
@@ -114,14 +114,26 @@ ViewData["Title"] = "Home Page";
   async function LoadActiveUsersCount() {
     const response = await fetch('/api/stats/active-users');
     const data = await response.json();
-    document.getElementById('activeUsersCount').innerText = data.length;
+    const count = data.length;
+
+    const text = count === 1
+      ? `Currently there is <strong>1</strong> active customer.`
+      : `Currently there are <strong>${count}</strong> active customers.`;
+
+    document.getElementById('activeUsersText').innerHTML = text;
   }
 
   async function LoadActiveDiscountCount() {
     const response = await fetch('/api/stats/check-discount');
     const data = await response.json();
     const discounted = data.products.filter(p => p.hasDiscount === true);
-    document.getElementById('activeDiscountCount').innerText = discounted.length;
+    const count = discounted.length;
+
+    const text = count === 1
+      ? `Currently there is <strong>1</strong> product with an active discount.`
+      : `Currently there are <strong>${count}</strong> products with an active discount.`;
+
+    document.getElementById('activeDiscountText').innerHTML = text;
   }
 
   LoadOrdersPerMonth();
