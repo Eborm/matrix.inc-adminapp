@@ -27,7 +27,7 @@ public class LogsController : Controller
         {
             user = _UserRepository.GetUserByUID(Id);
         }
-        if (user != null && user.Permissions <= 2)
+        if (user != null && user.Permissions <= 1)
         {
             return View(_logsRepository.GetAllLogs());
         }
