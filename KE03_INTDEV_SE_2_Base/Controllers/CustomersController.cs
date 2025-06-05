@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,17 +6,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DataAccessLayer;
+using DataAccessLayer.Interfaces;
 using DataAccessLayer.Models;
+using DataAccessLayer.Repositories;
 
 namespace KE03_INTDEV_SE_2_Base.Controllers
 {
     public class CustomersController : Controller
     {
         private readonly MatrixIncDbContext _context;
+        private readonly IUserRepository _userRepository;
+        private readonly ILogsRepository _logsRepository;
 
-        public CustomersController(MatrixIncDbContext context)
+        public CustomersController(MatrixIncDbContext context, IUserRepository UserRepository, ILogsRepository LogsRepository)
         {
             _context = context;
+            _userRepository = UserRepository;
+            _logsRepository = LogsRepository;
         }
 
         // GET: Customers
@@ -60,6 +66,20 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
             {
                 _context.Add(customer);
                 await _context.SaveChangesAsync();
+                
+                int UID = HttpContext.Session.GetObjectFromJson<int>("User_id");
+                string username = _userRepository.GetUserByUID(UID).UserName;
+        
+                var log = new Log()
+                {
+                    Action = "Add Customer",
+                    User = username,
+                    Time = DateTime.Now,
+                    City = "could not be found"
+                };
+        
+                await _logsRepository.AddLog(log);
+                
                 return RedirectToAction(nameof(Index));
             }
             return View(customer);
@@ -99,6 +119,19 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
                 {
                     _context.Update(customer);
                     await _context.SaveChangesAsync();
+                    
+                    int UID = HttpContext.Session.GetObjectFromJson<int>("User_id");
+                    string username = _userRepository.GetUserByUID(UID).UserName;
+        
+                    var log = new Log()
+                    {
+                        Action = "Edit Customer",
+                        User = username,
+                        Time = DateTime.Now,
+                        City = "could not be found"
+                    };
+        
+                    await _logsRepository.AddLog(log);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -142,6 +175,19 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
             var customer = await _context.Customers.FindAsync(id);
             if (customer != null)
             {
+                int UID = HttpContext.Session.GetObjectFromJson<int>("User_id");
+                string username = _userRepository.GetUserByUID(UID).UserName;
+        
+                var log = new Log()
+                {
+                    Action = "Delete Customer",
+                    User = username,
+                    Time = DateTime.Now,
+                    City = "could not be found"
+                };
+        
+                await _logsRepository.AddLog(log);
+                
                 _context.Customers.Remove(customer);
             }
 

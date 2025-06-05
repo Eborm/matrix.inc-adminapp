@@ -7,6 +7,7 @@ using DataAccessLayer.Interfaces;
 using DataAccessLayer.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace KE03_INTDEV_SE_2_Base.Controllers;
@@ -16,12 +17,16 @@ public class ProductsController : Controller
     private readonly MatrixIncDbContext _context;
     private readonly ILogger<ProductsController> _logger;
     private readonly IProductRepository _productRepository;
+    private readonly ILogsRepository _logsRepository;
+    private readonly IUserRepository _userRepository;
 
-    public ProductsController(MatrixIncDbContext context, ILogger<ProductsController> logger, IProductRepository productRepository)
+    public ProductsController(MatrixIncDbContext context, ILogger<ProductsController> logger, IProductRepository productRepository, ILogsRepository logsRepository, IUserRepository UserRepository)
     {
         _logger = logger;
         _productRepository = productRepository;
         _context = context;
+        _logsRepository = logsRepository;
+        _userRepository = UserRepository;
     }
     
     public async Task<IActionResult> Index()
@@ -57,6 +62,20 @@ public class ProductsController : Controller
     public async Task<IActionResult> Create(Product product)
     {
         _productRepository.AddProduct(product);
+        
+        int UID = HttpContext.Session.GetObjectFromJson<int>("User_id");
+        string username = _userRepository.GetUserByUID(UID).UserName;
+        
+        var log = new Log()
+        {
+            Action = "Add Product",
+            User = username,
+            Time = DateTime.Now,
+            City = "could not be found"
+        };
+        
+        await _logsRepository.AddLog(log);
+        
         return View(product);
     }
     
@@ -72,6 +91,7 @@ public class ProductsController : Controller
         {
             return NotFound();
         }
+        
         return View(product);
     }
 
@@ -89,6 +109,19 @@ public class ProductsController : Controller
             try
             {
                 _productRepository.UpdateProduct(product);
+                
+                int UID = HttpContext.Session.GetObjectFromJson<int>("User_id");
+                string username = _userRepository.GetUserByUID(UID).UserName;
+        
+                var log = new Log()
+                {
+                    Action = "Edit Product",
+                    User = username,
+                    Time = DateTime.Now,
+                    City = "could not be found"
+                };
+        
+                await _logsRepository.AddLog(log);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -121,8 +154,7 @@ public class ProductsController : Controller
 
         return View(customer);
     }
-
-
+    
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
@@ -130,6 +162,19 @@ public class ProductsController : Controller
         var product = _productRepository.GetProductById(id);
         if (product != null)
         {
+            int UID = HttpContext.Session.GetObjectFromJson<int>("User_id");
+            string username = _userRepository.GetUserByUID(UID).UserName;
+        
+            var log = new Log()
+            {
+                Action = "Delete Product",
+                User = username,
+                Time = DateTime.Now,
+                City = "could not be found"
+            };
+        
+            await _logsRepository.AddLog(log);
+            
             _productRepository.DeleteProduct(product);
         }
         return RedirectToAction(nameof(Index));
