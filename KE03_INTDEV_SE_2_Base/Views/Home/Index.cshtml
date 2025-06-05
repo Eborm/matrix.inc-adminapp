@@ -1,29 +1,130 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+  ViewData["Title"] = "Home Page";
 }
 
-<div class="alert-info">
-    <p class="p-1">
-        Dit project kun je gebruiken als startpunt voor de groeps inleveropdracht: <a href="https://moodle.zuyd.nl/mod/resource/view.php?id=1262065">KE03_INTDEV_SE_2</a>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Statistieken</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+    }
 
-        <ul>
-            <li>Wat ga je maken: Je realiseert samen met je casus groep een webapplicatie, een “admin-achtige” webapplicatie waarbij je gebruik maakt van ASP.NET Core MVC architecture pattern. De belangrijkste hoofdprestatie en functionele eisen van deze applicatie zijn als volgt: Het back-office team van Matrix Inc. kan de producten en bijbehorende data en details beheren in deze webapplicatie, zodat de interne en externe klanten altijd over de juiste informatie beschikken.</li>
-            
-            <li>
-                Hoe ga je dit maken?<br />
-                - Groepsopdracht.<br />
-                - Pas de principes van HCI toe (bijv. Paper prototyping, design principles etc…)<br />
-                - Jullie web applicatie maakt gebruik van het MVC architectural pattern.<br />                
-                - Je werkt met je casusgroep op 1 github repository. Tip: je kunt met branches en pull requests werken<br />
-                - Jullie applicatie maakt gebruik van responsive design, meerdere html elementen en toegepast css styles.<br />
-                - Jullie applicatie maakt gebruik van de aangeleverde data access layer voor een snelle start. Deze mag je zelf uitbreiden of aanpassen indien gewenst.<br />
-            </li>
-            <li>
-                Je krijgt een dal (data access layer) meegeleverd. Qua inhoud is die niet perfect gevuld, maar qua structuur biedt die voldoende om een mooi bestel systeem te kunnen maken. <br />
-                In het voorbeeld wordt nog geen gebruik gemaakt van de repository classes, maar direct van de db context. Het is aan jezelf om aan te passen en te kiezen hoe je dit kunt wil toepassen en/of oplossen.<br />
-                Maar mis je iets, je bent vrij om alles naar wens aan te passen! Ben creatief!
-            </li>
-            <p>Test text</p>
-        </ul>
-    </p>
+    h1 {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .chart-container {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .chart-box {
+      flex: 1 1 400px;
+      max-width: 500px;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    canvas {
+      width: 100% !important;
+      height: auto !important;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Matrix Inc. Dashboard</h1>
+
+<div class="chart-container">
+  <div class="chart-box">
+    <h2>Orders per Maand</h2>
+    <canvas id="ordersChart"></canvas>
+  </div>
+  <div class="chart-box">
+    <h2>Actieve Klanten</h2>
+    <canvas id="activeUsersChart"></canvas>
+  </div>
 </div>
+
+<script>
+  async function LoadOrdersPerMonth() {
+    const response = await fetch("/api/stats/orders-per-month");
+    const data = await response.json();
+
+    const labels = data.map(item => {
+      const date = new Date(item.year, item.month - 1);
+      return date.toLocaleString("nl-NL", { month: "long", year: "numeric" });
+    });
+
+    const counts = data.map(item => item.count);
+
+    new Chart(document.getElementById("ordersChart"), {
+      type: "line",
+      data: {
+        labels: labels,
+        datasets: [{
+          label: "Aantal orders",
+          data: counts,
+          fill: false,
+          borderColor: "blue",
+          tension: 0.3
+        }]
+      }
+    });
+  }
+
+  async function loadActiveUsersChart() {
+    const response = await fetch('/api/stats/active-users');
+    const data = await response.json();
+
+    const count = data.length;
+
+    const ctx = document.getElementById('activeUsersChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Actieve klanten'],
+        datasets: [{
+          label: 'Aantal',
+          data: [count],
+          backgroundColor: 'rgba(255, 99, 132, 0.5)',
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 1,
+          // Smallere staaf
+          barPercentage: 0.3,
+          categoryPercentage: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            precision: 0
+          }
+        }
+      }
+    });
+  }
+
+  LoadOrdersPerMonth();
+  loadActiveUsersChart();
+</script>
+
+</body>
+</html>

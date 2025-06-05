@@ -13,7 +13,7 @@ namespace DataAccessLayer.Repositories
     {
         private readonly MatrixIncDbContext _context;
 
-        public ProductRepository(MatrixIncDbContext context) 
+        public ProductRepository(MatrixIncDbContext context)
         {
             _context = context;
         }
@@ -43,6 +43,18 @@ namespace DataAccessLayer.Repositories
         {
             _context.Products.Update(product);
             _context.SaveChanges();
+        }
+
+        public void SetDiscount(int ProductId, decimal discount, decimal DiscountDuration)
+        {
+            var product = _context.Products.Find(ProductId);
+            if (product != null)
+            {
+                product.DiscountStartTime = DateTime.Now.Second;
+                product.DiscountDuration = DiscountDuration;
+                product.Discount = discount;
+                _context.SaveChanges();
+            }
         }
     }
 }

@@ -21,19 +21,13 @@
                 <div class="navbar-collapse collapse" id="navbarColor01">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" href="index">
-                                Home
-                                <span class="visually-hidden">(current)</span>
-                            </a>
+                            <a class="nav-link" href="/Home">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Add product</a>
+                            <a class="nav-link" href="/Products">Product manager</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Edit product</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Remove product</a>
+                            <a class="nav-link" href="/User">User manager</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav ms-auto">
@@ -50,12 +44,6 @@
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - KE03_INTDEV_SE_2_Base - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

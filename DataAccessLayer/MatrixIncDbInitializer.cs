@@ -40,9 +40,9 @@ namespace DataAccessLayer
 
             var products = new Product[]
             {
-                new Product { Name = "Nebuchadnezzar", Description = "Het schip waarop Neo voor het eerst de echte wereld leert kennen", Price = 10000.00m },
-                new Product { Name = "Jack-in Chair", Description = "Stoel met een rugsteun en metalen armen waarin mensen zitten om ingeplugd te worden in de Matrix via een kabel in de nekpoort", Price = 500.50m },
-                new Product { Name = "EMP (Electro-Magnetic Pulse) Device", Description = "Wapentuig op de schepen van Zion", Price = 129.99m }
+                new Product { Name = "Nebuchadnezzar", Description = "Het schip waarop Neo voor het eerst de echte wereld leert kennen", Price = 10000.00m, Discount = 0.00m },
+                new Product { Name = "Jack-in Chair", Description = "Stoel met een rugsteun en metalen armen waarin mensen zitten om ingeplugd te worden in de Matrix via een kabel in de nekpoort", Price = 500.50m, Discount = 0.00m },
+                new Product { Name = "EMP (Electro-Magnetic Pulse) Device", Description = "Wapentuig op de schepen van Zion", Price = 129.99m, Discount = 0.00m }
             };
             context.Products.AddRange(products);
 
@@ -55,8 +55,15 @@ namespace DataAccessLayer
             };
             context.Parts.AddRange(parts);
 
-            var Users = new User { UserName = "Admin", Password = "admin", Permissions="4" };
+            var logs = new Log[]
+            {
+                new Log { Action = "Edit Product", Time = DateTime.Now, City = "Utrecht", User = "Admin01"},
+                new Log { Action = "Delete Product", Time = DateTime.Now, City = "Maastricht", User = "Admin02" },
+                new Log { Action = "Create Product", Time = DateTime.Now, City = "Rotterdam", User = "Admin02" },
+            };
+            context.Logs.AddRange(logs);
 
+            var Users = new User { UserName = "Admin", Password = "admin", Permissions="4" };
             context.Users.AddRange(Users);
 
             context.SaveChanges();

@@ -17,6 +17,12 @@ namespace DataAccessLayer.Models
 
         public decimal Price { get; set; }
 
+        public decimal Discount { get; set; }
+
+        public decimal DiscountDuration { get; set; }///in seconden
+
+        public decimal DiscountStartTime { get; set; }///in seconden
+
         public ICollection<Order> Orders { get; } = new List<Order>();
 
         public ICollection<Part> Parts { get; } = new List<Part>();
