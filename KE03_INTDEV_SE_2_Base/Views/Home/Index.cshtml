@@ -1,9 +1,9 @@
 ﻿@{
-  ViewData["Title"] = "Home Page";
+ViewData["Title"] = "Home Page";
 }
 
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -40,9 +40,24 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
+    .info-box {
+      flex: 1 1 400px;
+      margin: 13px;
+      max-width: 500px;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      font-size: 18px;
+    }
+
     canvas {
       width: 100% !important;
       height: auto !important;
+    }
+
+    strong {
+      color: #333;
     }
   </style>
 </head>
@@ -52,12 +67,20 @@
 
 <div class="chart-container">
   <div class="chart-box">
-    <h2>Orders per Maand</h2>
+    <h2>Orders per month</h2>
     <canvas id="ordersChart"></canvas>
   </div>
-  <div class="chart-box">
-    <h2>Actieve Klanten</h2>
-    <canvas id="activeUsersChart"></canvas>
+
+  <div class="info-container">
+    <div class="info-box">
+      <h2>active customers</h2>
+      <p>Currently there are <strong id="activeUsersCount">...</strong> active customers.</p>
+    </div>
+
+    <div class="info-box">
+      <h2>Active Discounts</h2>
+      <p>Currently there are <strong id="activeDiscountCount">...</strong> products with an active discount.</p>
+    </div>
   </div>
 </div>
 
@@ -68,7 +91,7 @@
 
     const labels = data.map(item => {
       const date = new Date(item.year, item.month - 1);
-      return date.toLocaleString("nl-NL", { month: "long", year: "numeric" });
+      return date.toLocaleString("en-EN", { month: "long", year: "numeric" });
     });
 
     const counts = data.map(item => item.count);
@@ -78,7 +101,7 @@
       data: {
         labels: labels,
         datasets: [{
-          label: "Aantal orders",
+          label: "Order amount",
           data: counts,
           fill: false,
           borderColor: "blue",
@@ -88,42 +111,22 @@
     });
   }
 
-  async function loadActiveUsersChart() {
+  async function LoadActiveUsersCount() {
     const response = await fetch('/api/stats/active-users');
     const data = await response.json();
+    document.getElementById('activeUsersCount').innerText = data.length;
+  }
 
-    const count = data.length;
-
-    const ctx = document.getElementById('activeUsersChart').getContext('2d');
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['Actieve klanten'],
-        datasets: [{
-          label: 'Aantal',
-          data: [count],
-          backgroundColor: 'rgba(255, 99, 132, 0.5)',
-          borderColor: 'rgba(255, 99, 132, 1)',
-          borderWidth: 1,
-          // Smallere staaf
-          barPercentage: 0.3,
-          categoryPercentage: 0.3
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true,
-            precision: 0
-          }
-        }
-      }
-    });
+  async function LoadActiveDiscountCount() {
+    const response = await fetch('/api/stats/check-discount');
+    const data = await response.json();
+    const discounted = data.products.filter(p => p.hasDiscount === true);
+    document.getElementById('activeDiscountCount').innerText = discounted.length;
   }
 
   LoadOrdersPerMonth();
-  loadActiveUsersChart();
+  LoadActiveUsersCount();
+  LoadActiveDiscountCount();
 </script>
 
 </body>
