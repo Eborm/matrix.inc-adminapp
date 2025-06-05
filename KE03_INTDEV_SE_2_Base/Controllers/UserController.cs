@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using DataAccessLayer.Interfaces;
+﻿using DataAccessLayer.Interfaces;
 using DataAccessLayer.Models;
-using KE03_INTDEV_SE_2_Base.Models;
 using DataAccessLayer.Repositories;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using KE03_INTDEV_SE_2_Base.Controllers;
+using KE03_INTDEV_SE_2_Base.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace KE03_INTDEV_SE_2_Base.Controllers
 {
@@ -83,21 +84,16 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
             {
                 UserName = model.UserName,
                 Password = _UserRepository.EncryptPassword("password"), //Stock password
-                Permissions = model.Permissions 
+                Permissions = model.Permissions
             };
             _UserRepository.AddUser(user);
             return RedirectToAction("Index", "Home");
         }
 
-
-        // Stub methods — add logic as needed
-        public IActionResult Edit(int id) => View();
-        [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, User model) => RedirectToAction(nameof(Index));
-
-        public IActionResult Delete()
+        public IActionResult Delete(int id)
         {
-            return View();
+            User user = _UserRepository.GetUserByUID(id);
+            return View(user);
         }
         [HttpPost, ValidateAntiForgeryToken]
         public IActionResult Delete(User model)
@@ -146,5 +142,54 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
                 return View();
             }
         }
+        public IActionResult panel()
+        {
+            return View(_UserRepository.GetAllUsers());
+        }
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = _UserRepository.GetUserByUID(id.Value);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return View(user);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, User user)
+        {
+            User new_user = _UserRepository.GetUserByUID(id);
+            new_user.UserName = user.UserName;
+            new_user.Permissions = user.Permissions;
+            if (id != user.Id)
+            {
+                return NotFound();
+            }
+            try
+            {
+                _UserRepository.UpdateUser(new_user);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (_UserRepository.GetUserByUID(user.Id) == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return RedirectToAction(panel);
+        }
+
     }
 }
