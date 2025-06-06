@@ -63,7 +63,7 @@ namespace DataAccessLayer
             };
             context.Logs.AddRange(logs);
 
-            var Users = new User { UserName = "Admin", Password = "A9jU6tAyZwvsi/WbeeBtCA==", Permissions=4 };
+            var Users = new User { UserName = "Admin", Password = "A9jU6tAyZwvsi/WbeeBtCA==", Permissions=0 };
             context.Users.AddRange(Users);
 
             context.SaveChanges();

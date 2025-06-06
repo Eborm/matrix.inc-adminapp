@@ -37,8 +37,8 @@
                 @Html.DisplayFor(modelItem => item.Active)
             </td>
             <td>
+                    <a asp-action="Details" asp-route-id="@item.Id"><button class="btn btn-primary">More info</button></a>
                     <a asp-action="Edit" asp-route-id="@item.Id"><button class="btn btn-primary">Edit</button></a>
-                    <a asp-action="Details" asp-route-id="@item.Id"><button class="btn btn-primary">Details</button></a>
                     <a asp-action="Delete" asp-route-id="@item.Id"><button class="btn btn-primary">Delete</button></a>
             </td>
         </tr>
