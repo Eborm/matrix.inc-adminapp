@@ -11,16 +11,11 @@ namespace DataAccessLayer
     {
         public static void Initialize(MatrixIncDbContext context)
         {
-            // Look for any customers.
             if (context.Customers.Any())
             {
-                return;   // DB has been seeded
+                return;
             }
-
-            // TODO: Hier moet ik nog wat namen verzinnen die betrekking hebben op de matrix.
-            // - Denk aan de m3 boutjes, moertjes en ringetjes.
-            // - Denk aan namen van schepen
-            // - Denk aan namen van vliegtuigen            
+            
             var customers = new Customer[]
             {
                 new Customer { Name = "Neo", Address = "123 Elm St" , Active=true},
@@ -31,17 +26,23 @@ namespace DataAccessLayer
 
             var orders = new Order[]
             {
-                new Order { Customer = customers[0], OrderDate = DateTime.Parse("2021-01-01")},
-                new Order { Customer = customers[0], OrderDate = DateTime.Parse("2021-02-01")},
-                new Order { Customer = customers[1], OrderDate = DateTime.Parse("2021-02-01")},
-                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2021-03-01")}
+                new Order { Customer = customers[0], OrderDate = DateTime.Parse("2024-01-01")},
+                new Order { Customer = customers[0], OrderDate = DateTime.Parse("2024-02-01")},
+                new Order { Customer = customers[1], OrderDate = DateTime.Parse("2024-02-01")},
+                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2024-03-01")},
+                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2024-03-05")},
+                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2025-01-10")},
+                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2025-01-01")},
+                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2025-06-10")},
+                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2025-06-12")},
+                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2025-06-20")}
             };  
             context.Orders.AddRange(orders);
 
             var products = new Product[]
             {
                 new Product { Name = "Nebuchadnezzar", Description = "Het schip waarop Neo voor het eerst de echte wereld leert kennen", Price = 10000.00m, Discount = 0.00m },
-                new Product { Name = "Jack-in Chair", Description = "Stoel met een rugsteun en metalen armen waarin mensen zitten om ingeplugd te worden in de Matrix via een kabel in de nekpoort", Price = 500.50m, Discount = 0.00m },
+                new Product { Name = "Jack-in Chair", Description = "Stoel met een rugsteun en metalen armen waarin mensen zitten om ingeplugd te worden in de Matrix via een kabel in de nekpoort", Price = 500.50m, Discount = 1.00m },
                 new Product { Name = "EMP (Electro-Magnetic Pulse) Device", Description = "Wapentuig op de schepen van Zion", Price = 129.99m, Discount = 0.00m }
             };
             context.Products.AddRange(products);
