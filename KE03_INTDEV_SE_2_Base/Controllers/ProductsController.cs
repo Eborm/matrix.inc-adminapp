@@ -126,6 +126,10 @@ public class ProductsController : Controller
             try
             {
                 _productRepository.UpdateProduct(product);
+                if (product.Discount != 0)
+                {
+                    _productRepository.SetDiscount(product.Id, product.Discount, product.DiscountDuration);
+                }
                 
                 int UID = HttpContext.Session.GetObjectFromJson<int>("User_id");
                 string username = _UserRepository.GetUserByUID(UID).UserName;
