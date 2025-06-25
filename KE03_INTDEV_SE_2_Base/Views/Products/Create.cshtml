@@ -28,13 +28,15 @@
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Discount" class="control-label"></label>
-                <input asp-for="Discount" class="form-control" />
+                <label asp-for="Discount" class="control-label">Korting (%)</label>
+                <input asp-for="Discount" class="form-control" type="number" min="0" max="100" step="1" />
+                <span class="form-text">Vul een percentage in, bijvoorbeeld 10 voor 10% korting.</span>
                 <span asp-validation-for="Discount" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DiscountDuration" class="control-label"></label>
-                <input asp-for="DiscountDuration" class="form-control" />
+                <label asp-for="DiscountDuration" class="control-label">Korting duur (dagen)</label>
+                <input asp-for="DiscountDuration" class="form-control" type="number" min="0" step="1" />
+                <span class="form-text">Vul het aantal dagen in dat de korting geldig is.</span>
                 <span asp-validation-for="DiscountDuration" class="text-danger"></span>
             </div>
             <div class="form-group">

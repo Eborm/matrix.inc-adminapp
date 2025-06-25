@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using DataAccessLayer;
 using DataAccessLayer.Interfaces;
 using DataAccessLayer.Models;
@@ -24,13 +23,12 @@ public class ProductsController : Controller
         _context = context;
     }
     
-    public async Task<IActionResult> Index()
+    public IActionResult Index()
     {
         return View(_productRepository.GetAllProducts());
     }
 
-
-    public async Task<IActionResult> Details(int? id)
+    public IActionResult Details(int? id)
     {
         if (id == null)
         {
@@ -45,7 +43,6 @@ public class ProductsController : Controller
 
         return View(product);
     }
-
 
     public IActionResult Create()
     {
@@ -54,13 +51,19 @@ public class ProductsController : Controller
     
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Product product)
+    public IActionResult Create(Product product)
     {
+        product.Discount = product.Discount / 100m;
+        product.DiscountDuration = product.DiscountDuration * 86400; // dagen naar seconden
+        if (product.Discount > 0)
+        {
+            product.DiscountStartTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        }
         _productRepository.AddProduct(product);
-        return View(product);
+        return RedirectToAction(nameof(Index));
     }
     
-    public async Task<IActionResult> Edit(int? id)
+    public IActionResult Edit(int? id)
     {
         if (id == null)
         {
@@ -77,7 +80,7 @@ public class ProductsController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, Product product)
+    public IActionResult Edit(int id, Product product)
     {
         if (id != product.Id)
         {
@@ -86,46 +89,37 @@ public class ProductsController : Controller
 
         if (ModelState.IsValid)
         {
-            try
+            product.Discount = product.Discount / 100m;
+            product.DiscountDuration = product.DiscountDuration * 86400; // dagen naar seconden
+            if (product.Discount > 0)
             {
-                _productRepository.UpdateProduct(product);
+                product.DiscountStartTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProductExists(product.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _productRepository.UpdateProduct(product);
             return RedirectToAction(nameof(Index));
         }
         return View(product);
     }
 
-    public async Task<IActionResult> Delete(int? id)
+    public IActionResult Delete(int? id)
     {
         if (id == null)
         {
             return NotFound();
         }
 
-        var customer = _productRepository.GetProductById(id.Value);
-        if (customer == null)
+        var product = _productRepository.GetProductById(id.Value);
+        if (product == null)
         {
             return NotFound();
         }
 
-        return View(customer);
+        return View(product);
     }
-
 
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Delete(int id)
+    public IActionResult DeleteConfirmed(int id)
     {
         var product = _productRepository.GetProductById(id);
         if (product != null)

@@ -1,0 +1,35 @@
+@model DataAccessLayer.Models.Order
+@{
+    ViewData["Title"] = "Nieuwe order aanmaken";
+}
+
+<h2>Nieuwe order aanmaken</h2>
+
+@* Validatie-overzicht *@
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <ul>
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <li>@error.ErrorMessage</li>
+        }
+        </ul>
+    </div>
+}
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="CustomerId" class="form-label">Klant</label>
+        <select asp-for="CustomerId" class="form-select" asp-items="ViewBag.Customers">
+            <option value="">-- Selecteer klant --</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Producten</label>
+        <select name="selectedProducts" class="form-select" multiple size="5" asp-items="ViewBag.Products"></select>
+        <div class="form-text">Houd Ctrl (Windows) of Cmd (Mac) ingedrukt om meerdere producten te selecteren.</div>
+    </div>
+    <button type="submit" class="btn btn-primary">Order opslaan</button>
+    <a href="/Orders" class="btn btn-secondary">Annuleren</a>
+</form> 

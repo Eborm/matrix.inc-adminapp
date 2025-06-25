@@ -2,39 +2,51 @@
 
 @{
     ViewData["Title"] = "Index";
+    var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 }
 
-<h1>Index</h1>
+<h1>Producten</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-success">Nieuw product</a>
 </p>
-<table class="table">
+<table class="table table-striped table-hover">
     <thead>
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Price)
-        </th>
+        <th>@Html.DisplayNameFor(model => model.Name)</th>
+        <th>@Html.DisplayNameFor(model => model.Description)</th>
+        <th>Prijs</th>
+        <th>Korting (%)</th>
+        <th>Prijs na korting</th>
+        <th>Korting status</th>
         <th></th>
     </tr>
     </thead>
     <tbody>
     @foreach (var item in Model) {
+        var korting = item.Discount;
+        var prijsNaKorting = item.Price * (1 - korting);
+        var kortingActief = korting > 0 && item.DiscountStartTime > 0 && now < (item.DiscountStartTime + item.DiscountDuration);
+        var secondenResterend = (item.DiscountStartTime + item.DiscountDuration) - now;
+        var dagenResterend = Math.Max(0, Math.Ceiling((double)secondenResterend / 86400));
         <tr>
+            <td>@item.Name</td>
+            <td>@item.Description</td>
+            <td>&euro; @item.Price.ToString("0.00")</td>
+            <td>@(korting > 0 ? (korting * 100).ToString("0") + "%" : "-")</td>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @if (kortingActief) {
+                    <span class="badge bg-success">&euro; @prijsNaKorting.ToString("0.00")</span>
+                } else {
+                    <span>&euro; @item.Price.ToString("0.00")</span>
+                }
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
+                @if (kortingActief) {
+                    <span class="badge bg-info">Nog @dagenResterend dag(en) korting!</span>
+                } else if (korting > 0) {
+                    <span class="badge bg-secondary">Korting verlopen</span>
+                }
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
