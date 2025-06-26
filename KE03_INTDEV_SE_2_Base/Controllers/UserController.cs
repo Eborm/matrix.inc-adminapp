@@ -9,8 +9,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KE03_INTDEV_SE_2_Base.Controllers
 {
+
     public class UserController : Controller
     {
+        private bool UserHasPermission(int requiredPermission)
+        {
+            int userId = HttpContext.Session.GetObjectFromJson<int>("User_id");
+            if (userId == 0) return false;
+            var user = _UserRepository.GetUserByUID(userId);
+            return user != null && user.Permissions <= requiredPermission;
+        }
         private readonly ILogger<UserController> _logger;
         private readonly IUserRepository _UserRepository;
         private readonly ILogsRepository _LogsRepository;
@@ -70,15 +78,25 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
                 {
                     ModelState.AddModelError("", "Invalid username or password.");
                     _logger.LogWarning($"Failed login attempt for user {model.UserName}.");
-                    return View();
+                    return View(model);
                 }
             }
-            return View();
+            else
+            {
+                ModelState.AddModelError("", "Invalid username or password.");
+                _logger.LogWarning($"Failed login attempt for user {model.UserName}.");
+                return View(model);
+            }
 
         }
 
         public IActionResult Create()
         {
+            if (!UserHasPermission(0)) // 0 = admin, for example
+            {
+                    TempData["ErrorMessage"] = "You do not have permission to access that page.";
+                    return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
@@ -109,12 +127,22 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
 
         public IActionResult Delete(int id)
         {
+            if (!UserHasPermission(0))
+            {
+                    TempData["ErrorMessage"] = "You do not have permission to access that page.";
+                    return RedirectToAction("Index", "Home");
+            }
             User user = _UserRepository.GetUserByUID(id);
             return View(user);
         }
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(User model)
         {
+            if (!UserHasPermission(0))
+            {
+                    TempData["ErrorMessage"] = "You do not have permission to access that page.";
+                    return RedirectToAction("Index", "Home");
+            }
             User user = _UserRepository.GetUserByUserName(model.UserName);
             if (user != null)
             {
@@ -186,22 +214,29 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
             }
             else if (user != null)
             {
-                return Redirect("/Home/Index");
+                TempData["ErrorMessage"] = "You do not have permission to access that page.";
+                return RedirectToAction("Index", "Home");
             }
             else
             {
-                return Redirect("/User/Login");
+                TempData["ErrorMessage"] = "You do not have permission to access that page.";
+                return RedirectToAction("Login", "User");
             }
         }
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            var user = _UserRepository.GetUserByUID(id.Value);
+            if (!UserHasPermission(0))
+            {
+                    TempData["ErrorMessage"] = "You do not have permission to access that page.";
+                    return RedirectToAction("Index", "Home");
+            }
+            else if (id == null)
             {
                 return NotFound();
             }
 
-            var user = _UserRepository.GetUserByUID(id.Value);
-            if (user == null)
+            else if (user == null)
             {
                 return NotFound();
             }
@@ -212,6 +247,11 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, User user)
         {
+            if (!UserHasPermission(0))
+            {
+                    TempData["ErrorMessage"] = "You do not have permission to access that page.";
+                    return RedirectToAction("Index", "Home");
+            }
             User new_user = _UserRepository.GetUserByUID(id);
             new_user.UserName = user.UserName;
             new_user.Permissions = user.Permissions;
