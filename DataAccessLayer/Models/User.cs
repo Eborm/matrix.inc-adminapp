@@ -21,5 +21,7 @@ namespace DataAccessLayer.Models
         public string Password { get; set; }
 
         public int Permissions { get; set; }
+
+        public ICollection<Order> Orders { get; set; } = new List<Order>();
     }
 }

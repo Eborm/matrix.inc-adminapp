@@ -13,10 +13,15 @@ namespace DataAccessLayer.Models
 
         public DateTime OrderDate { get; set; }
 
+        [Required]
         public int CustomerId { get; set; }
         
         public Customer Customer { get; set; } = null!;
 
-        public ICollection<Product> Products { get; } = new List<Product>();
+        [Required]
+        public int UserId { get; set; }
+        public User User { get; set; } = null!;
+
+        public ICollection<OrderRegel> OrderRegels { get; set; } = new List<OrderRegel>();
     }
 }

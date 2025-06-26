@@ -1,0 +1,23 @@
+@model DataAccessLayer.Models.Order
+@{
+    ViewData["Title"] = "Order verwijderen";
+}
+<h1>Order verwijderen</h1>
+<h4>Weet je zeker dat je deze order wilt verwijderen?</h4>
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">Id</dt>
+        <dd class="col-sm-10">@Model.Id</dd>
+        <dt class="col-sm-2">Datum</dt>
+        <dd class="col-sm-10">@Model.OrderDate.ToShortDateString()</dd>
+        <dt class="col-sm-2">Klant</dt>
+        <dd class="col-sm-10">@Model.Customer?.Name</dd>
+        <dt class="col-sm-2">Gebruiker</dt>
+        <dd class="col-sm-10">@Model.User?.UserName</dd>
+    </dl>
+</div>
+<form asp-action="Verwijderen" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Verwijderen</button>
+    <a asp-action="Index" class="btn btn-secondary">Annuleren</a>
+</form> 

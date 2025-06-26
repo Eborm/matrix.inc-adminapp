@@ -24,18 +24,22 @@ namespace DataAccessLayer
             };
             context.Customers.AddRange(customers);
 
+            var Users = new User { UserName = "Admin", Password = "A9jU6tAyZwvsi/WbeeBtCA==", Permissions=0 };
+            context.Users.Add(Users);
+            context.SaveChanges();
+
             var orders = new Order[]
             {
-                new Order { Customer = customers[0], OrderDate = DateTime.Parse("2024-01-01")},
-                new Order { Customer = customers[0], OrderDate = DateTime.Parse("2024-02-01")},
-                new Order { Customer = customers[1], OrderDate = DateTime.Parse("2024-02-01")},
-                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2024-03-01")},
-                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2024-03-05")},
-                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2025-01-10")},
-                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2025-01-01")},
-                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2025-06-10")},
-                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2025-06-12")},
-                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2025-06-20")}
+                new Order { Customer = customers[0], OrderDate = DateTime.Parse("2024-01-01"), User = Users },
+                new Order { Customer = customers[0], OrderDate = DateTime.Parse("2024-02-01"), User = Users },
+                new Order { Customer = customers[1], OrderDate = DateTime.Parse("2024-02-01"), User = Users },
+                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2024-03-01"), User = Users },
+                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2024-03-05"), User = Users },
+                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2025-01-10"), User = Users },
+                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2025-01-01"), User = Users },
+                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2025-06-10"), User = Users },
+                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2025-06-12"), User = Users },
+                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2025-06-20"), User = Users }
             };  
             context.Orders.AddRange(orders);
 
@@ -63,9 +67,6 @@ namespace DataAccessLayer
                 new Log { Action = "Create Product", Time = DateTime.Now, City = "Rotterdam", User = "Admin02" },
             };
             context.Logs.AddRange(logs);
-
-            var Users = new User { UserName = "Admin", Password = "A9jU6tAyZwvsi/WbeeBtCA==", Permissions=0 };
-            context.Users.AddRange(Users);
 
             context.SaveChanges();
 
