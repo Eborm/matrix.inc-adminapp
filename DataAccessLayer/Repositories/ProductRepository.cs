@@ -45,14 +45,14 @@ namespace DataAccessLayer.Repositories
             _context.SaveChanges();
         }
 
-        public void SetDiscount(int ProductId, decimal discount, decimal DiscountDuration)
+        public void SetDiscount(int ProductId, decimal discount, DateTime? startDate, DateTime? endDate)
         {
             var product = _context.Products.Find(ProductId);
             if (product != null)
             {
-                product.DiscountStartTime = DateTime.Now.Second;
-                product.DiscountDuration = DiscountDuration;
                 product.Discount = discount;
+                product.DiscountStartDate = startDate;
+                product.DiscountEndDate = endDate;
                 _context.SaveChanges();
             }
         }

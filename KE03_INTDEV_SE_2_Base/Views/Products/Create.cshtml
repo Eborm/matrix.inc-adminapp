@@ -33,9 +33,14 @@
                 <span asp-validation-for="Discount" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DiscountDuration" class="control-label"></label>
-                <input asp-for="DiscountDuration" class="form-control" />
-                <span asp-validation-for="DiscountDuration" class="text-danger"></span>
+                <label asp-for="DiscountStartDate" class="control-label"></label>
+                <input asp-for="DiscountStartDate" class="form-control" type="date" />
+                <span asp-validation-for="DiscountStartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DiscountEndDate" class="control-label"></label>
+                <input asp-for="DiscountEndDate" class="form-control" type="date" />
+                <span asp-validation-for="DiscountEndDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

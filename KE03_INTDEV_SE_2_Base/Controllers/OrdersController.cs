@@ -19,9 +19,10 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
             var user = _UserRepository.GetUserByUID(userId);
             return user != null && user.Permissions <= requiredPermission;
         }
-        public OrdersController(MatrixIncDbContext context)
+        public OrdersController(MatrixIncDbContext context, IUserRepository userRepository)
         {
             _context = context;
+            _UserRepository = userRepository;
         }
 
         // GET: Orders

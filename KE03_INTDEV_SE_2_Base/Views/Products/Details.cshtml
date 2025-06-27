@@ -32,31 +32,32 @@
         </dd>
 
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
+            Prijs
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Price)
+            @if (Model.IsDiscountActive)
+            {
+                <span style="color: red; font-weight: bold;">@Model.DiscountedPrice</span>
+                <span style="text-decoration: line-through; color: gray;">@Model.Price</span>
+            }
+            else
+            {
+                @Model.Price
+            }
         </dd>
 
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Discount)
+            Korting
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Discount)
-        </dd>
-
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DiscountDuration)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DiscountDuration)
-        </dd>
-
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DiscountStartTime)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DiscountStartTime)
+            @if (Model.IsDiscountActive)
+            {
+                <span>@Model.Discount % (Korting actief!)</span>
+            }
+            else
+            {
+                <span>-</span>
+            }
         </dd>
     </dl>
 </div>

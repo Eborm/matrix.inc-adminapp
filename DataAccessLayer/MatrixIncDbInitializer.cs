@@ -30,16 +30,7 @@ namespace DataAccessLayer
 
             var orders = new Order[]
             {
-                new Order { Customer = customers[0], OrderDate = DateTime.Parse("2024-01-01"), User = Users },
-                new Order { Customer = customers[0], OrderDate = DateTime.Parse("2024-02-01"), User = Users },
-                new Order { Customer = customers[1], OrderDate = DateTime.Parse("2024-02-01"), User = Users },
-                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2024-03-01"), User = Users },
-                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2024-03-05"), User = Users },
-                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2025-01-10"), User = Users },
-                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2025-01-01"), User = Users },
-                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2025-06-10"), User = Users },
-                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2025-06-12"), User = Users },
-                new Order { Customer = customers[2], OrderDate = DateTime.Parse("2025-06-20"), User = Users }
+                
             };  
             context.Orders.AddRange(orders);
 

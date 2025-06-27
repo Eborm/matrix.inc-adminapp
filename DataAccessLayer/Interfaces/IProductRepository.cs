@@ -19,6 +19,6 @@ namespace DataAccessLayer.Interfaces
 
         public void DeleteProduct(Product product);
 
-        public void SetDiscount(int ProductId, decimal discount, decimal DiscountDuration);
+        public void SetDiscount(int ProductId, decimal discount, DateTime? startDate, DateTime? endDate);
     }
 }

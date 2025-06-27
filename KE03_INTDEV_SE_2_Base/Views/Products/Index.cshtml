@@ -19,7 +19,10 @@
             @Html.DisplayNameFor(model => model.Name)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Price)
+            Prijs
+        </th>
+        <th>
+            Korting
         </th>
         <th></th>
     </tr>
@@ -34,7 +37,25 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Price)
+                @if (item.IsDiscountActive)
+                {
+                    <span style="color: red; font-weight: bold;">@item.DiscountedPrice</span>
+                    <span style="text-decoration: line-through; color: gray;">@item.Price</span>
+                }
+                else
+                {
+                    @item.Price
+                }
+            </td>
+            <td>
+                @if (item.IsDiscountActive)
+                {
+                    <span>@item.Discount % (Korting actief!)</span>
+                }
+                else
+                {
+                    <span>-</span>
+                }
             </td>
             <td>
                     <a asp-action="Details" asp-route-id="@item.Id"><button class="btn btn-primary">More info</button></a>

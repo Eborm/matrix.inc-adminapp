@@ -169,7 +169,7 @@ public class ProductsController : Controller
                 _productRepository.UpdateProduct(product);
                 if (product.Discount != 0)
                 {
-                    _productRepository.SetDiscount(product.Id, product.Discount, product.DiscountDuration);
+                    _productRepository.SetDiscount(product.Id, product.Discount, product.DiscountStartDate, product.DiscountEndDate);
                 }
                 
                 int UID = HttpContext.Session.GetObjectFromJson<int>("User_id");

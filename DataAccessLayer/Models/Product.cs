@@ -19,9 +19,18 @@ namespace DataAccessLayer.Models
 
         public decimal Discount { get; set; }
 
-        public decimal DiscountDuration { get; set; }///in seconden
+        public DateTime? DiscountStartDate { get; set; }
+        public DateTime? DiscountEndDate { get; set; }
 
-        public decimal DiscountStartTime { get; set; }///in seconden
+        public bool IsDiscountActive =>
+            Discount > 0 &&
+            DiscountStartDate.HasValue &&
+            DiscountEndDate.HasValue &&
+            DiscountStartDate.Value.Date <= DateTime.Now.Date &&
+            DiscountEndDate.Value.Date >= DateTime.Now.Date;
+
+        public decimal DiscountedPrice =>
+            IsDiscountActive ? Math.Round(Price * (1 - Discount / 100), 2) : Price;
 
         public ICollection<Order> Orders { get; set; } = new List<Order>();
 

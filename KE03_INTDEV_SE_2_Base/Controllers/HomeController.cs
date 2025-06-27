@@ -19,18 +19,6 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Product> products = _productRepository.GetAllProducts();
-            foreach (var product in products)
-            {
-                if ((product.DiscountStartTime + product.DiscountDuration) < DateTime.Now.Second)
-                {
-                    product.DiscountDuration = 0;
-                    product.Discount = 0;
-                    product.DiscountStartTime = 0;
-                    _productRepository.UpdateProduct(product);
-                }
-            }
-
             return View();
         }
 

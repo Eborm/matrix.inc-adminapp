@@ -21,7 +21,6 @@ namespace DataAccessLayer.Models
         [Required]
         public int UserId { get; set; }
         public User User { get; set; } = null!;
-
         public ICollection<OrderRegel> OrderRegels { get; set; } = new List<OrderRegel>();
     }
 }
