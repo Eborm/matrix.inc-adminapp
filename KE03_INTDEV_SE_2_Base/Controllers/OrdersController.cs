@@ -28,14 +28,14 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
+            int userId = HttpContext.Session.GetObjectFromJson<int>("User_id");
+            if (userId == 0)
+                return Redirect("/User/Login");
             if (!UserHasPermission(2))
             {
                 TempData["ErrorMessage"] = "You do not have permission to access that page.";
                 return RedirectToAction("Index", "Home");
             }
-            int userId = HttpContext.Session.GetObjectFromJson<int>("User_id");
-            if (userId == 0)
-                return Redirect("/User/Login");
             var orders = _context.Orders
                 .Include(o => o.Customer)
                 .Include(o => o.User)

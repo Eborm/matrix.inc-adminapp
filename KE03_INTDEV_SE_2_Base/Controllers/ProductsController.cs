@@ -42,11 +42,6 @@ public class ProductsController : Controller
 
     public async Task<IActionResult> Index()
     {
-        if (!UserHasPermission(1))
-        {
-            TempData["ErrorMessage"] = "You do not have permission to access that page.";
-            return RedirectToAction("Index", "Home");
-        }
         int Id = HttpContext.Session.GetObjectFromJson<int>("User_id");
         User user = null;
         if (Id != 0)

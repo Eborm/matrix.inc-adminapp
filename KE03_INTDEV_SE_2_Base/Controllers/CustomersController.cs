@@ -42,11 +42,6 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         // GET: Customers
         public async Task<IActionResult> Index()
         {
-            if (!UserHasPermission(2))
-            {
-                TempData["ErrorMessage"] = "You do not have permission to access that page.";
-                return RedirectToAction("Index", "Home");
-            }
             int Id = HttpContext.Session.GetObjectFromJson<int>("User_id");
             User user = null;
             if (Id != 0)
