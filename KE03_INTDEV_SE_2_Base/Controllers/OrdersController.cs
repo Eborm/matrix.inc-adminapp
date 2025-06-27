@@ -1,16 +1,24 @@
 using DataAccessLayer;
+using DataAccessLayer.Interfaces;
 using DataAccessLayer.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using KE03_INTDEV_SE_2_Base.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace KE03_INTDEV_SE_2_Base.Controllers
 {
     public class OrdersController : Controller
     {
         private readonly MatrixIncDbContext _context;
-
+        private readonly IUserRepository _UserRepository;
+        private bool UserHasPermission(int requiredPermission)
+        {
+            int userId = HttpContext.Session.GetObjectFromJson<int>("User_id");
+            if (userId == 0) return false;
+            var user = _UserRepository.GetUserByUID(userId);
+            return user != null && user.Permissions <= requiredPermission;
+        }
         public OrdersController(MatrixIncDbContext context)
         {
             _context = context;
@@ -19,6 +27,11 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
+            if (!UserHasPermission(2))
+            {
+                TempData["ErrorMessage"] = "You do not have permission to access that page.";
+                return RedirectToAction("Index", "Home");
+            }
             int userId = HttpContext.Session.GetObjectFromJson<int>("User_id");
             if (userId == 0)
                 return Redirect("/User/Login");
@@ -33,6 +46,11 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         // GET: Orders/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!UserHasPermission(2))
+            {
+                TempData["ErrorMessage"] = "You do not have permission to access that page.";
+                return RedirectToAction("Index", "Home");
+            }
             int userId = HttpContext.Session.GetObjectFromJson<int>("User_id");
             if (userId == 0)
                 return Redirect("/User/Login");
@@ -51,6 +69,11 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         // GET: Orders/Aanmaken
         public IActionResult Aanmaken()
         {
+            if (!UserHasPermission(2))
+            {
+                TempData["ErrorMessage"] = "You do not have permission to access that page.";
+                return RedirectToAction("Index", "Home");
+            }
             int userId = HttpContext.Session.GetObjectFromJson<int>("User_id");
             if (userId == 0)
                 return Redirect("/User/Login");
@@ -75,6 +98,11 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Aanmaken(OrderAanmakenViewModel vm)
         {
+            if (!UserHasPermission(2))
+            {
+                TempData["ErrorMessage"] = "You do not have permission to access that page.";
+                return RedirectToAction("Index", "Home");
+            }
             int userId = HttpContext.Session.GetObjectFromJson<int>("User_id");
             if (userId == 0)
                 return Redirect("/User/Login");
@@ -116,6 +144,11 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         // GET: Orders/Bewerken/5
         public async Task<IActionResult> Bewerken(int? id)
         {
+            if (!UserHasPermission(2))
+            {
+                TempData["ErrorMessage"] = "You do not have permission to access that page.";
+                return RedirectToAction("Index", "Home");
+            }
             int userId = HttpContext.Session.GetObjectFromJson<int>("User_id");
             if (userId == 0)
                 return Redirect("/User/Login");
@@ -150,6 +183,11 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Bewerken(int id, KE03_INTDEV_SE_2_Base.Models.OrderAanmakenViewModel vm)
         {
+            if (!UserHasPermission(2))
+            {
+                TempData["ErrorMessage"] = "You do not have permission to access that page.";
+                return RedirectToAction("Index", "Home");
+            }
             int userId = HttpContext.Session.GetObjectFromJson<int>("User_id");
             if (userId == 0)
                 return Redirect("/User/Login");
@@ -196,6 +234,11 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         // GET: Orders/Verwijderen/5
         public async Task<IActionResult> Verwijderen(int? id)
         {
+            if (!UserHasPermission(2))
+            {
+                TempData["ErrorMessage"] = "You do not have permission to access that page.";
+                return RedirectToAction("Index", "Home");
+            }
             int userId = HttpContext.Session.GetObjectFromJson<int>("User_id");
             if (userId == 0)
                 return Redirect("/User/Login");
@@ -212,6 +255,11 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> VerwijderenBevestigd(int id)
         {
+            if (!UserHasPermission(2))
+            {
+                TempData["ErrorMessage"] = "You do not have permission to access that page.";
+                return RedirectToAction("Index", "Home");
+            }
             int userId = HttpContext.Session.GetObjectFromJson<int>("User_id");
             if (userId == 0)
                 return Redirect("/User/Login");

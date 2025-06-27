@@ -18,18 +18,35 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         private readonly IUserRepository _UserRepository;
         private readonly ILogsRepository _logsRepository;
         private readonly ILogger<CustomersController> _logger;
+        private bool CustomerExists(int id)
+        {
+            return _context.Customers.Any(e => e.Id == id);
+        }
 
-        public CustomersController(MatrixIncDbContext context, ILogger<CustomersController> logger, IUserRepository UserRepository, ILogsRepository LogsRepository)
+        private bool UserHasPermission(int requiredPermission)
+        {
+            int userId = HttpContext.Session.GetObjectFromJson<int>("User_id");
+            if (userId == 0) return false;
+            var user = _UserRepository.GetUserByUID(userId);
+            return user != null && user.Permissions <= requiredPermission;
+        }
+        public CustomersController(IUserRepository userRepository, MatrixIncDbContext context, ILogger<CustomersController> logger, IUserRepository UserRepository, ILogsRepository LogsRepository)
         {
             _context = context;
             _UserRepository = UserRepository;
             _logsRepository = LogsRepository;
             _logger = logger;
+            _UserRepository = userRepository;
         }
 
         // GET: Customers
         public async Task<IActionResult> Index()
         {
+            if (!UserHasPermission(2))
+            {
+                TempData["ErrorMessage"] = "You do not have permission to access that page.";
+                return RedirectToAction("Index", "Home");
+            }
             int Id = HttpContext.Session.GetObjectFromJson<int>("User_id");
             User user = null;
             if (Id != 0)
@@ -53,6 +70,11 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         // GET: Customers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!UserHasPermission(2))
+            {
+                TempData["ErrorMessage"] = "You do not have permission to access that page.";
+                return RedirectToAction("Index", "Home");
+            }
             if (id == null)
             {
                 return NotFound();
@@ -81,6 +103,11 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Address,Active")] Customer customer)
         {
+            if (!UserHasPermission(2))
+            {
+                TempData["ErrorMessage"] = "You do not have permission to access that page.";
+                return RedirectToAction("Index", "Home");
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(customer);
@@ -107,6 +134,11 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         // GET: Customers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!UserHasPermission(2))
+            {
+                TempData["ErrorMessage"] = "You do not have permission to access that page.";
+                return RedirectToAction("Index", "Home");
+            }
             if (id == null)
             {
                 return NotFound();
@@ -127,6 +159,11 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Address,Active")] Customer customer)
         {
+            if (!UserHasPermission(2))
+            {
+                TempData["ErrorMessage"] = "You do not have permission to access that page.";
+                return RedirectToAction("Index", "Home");
+            }
             if (id != customer.Id)
             {
                 return NotFound();
@@ -171,6 +208,11 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         // GET: Customers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!UserHasPermission(2))
+            {
+                TempData["ErrorMessage"] = "You do not have permission to access that page.";
+                return RedirectToAction("Index", "Home");
+            }
             if (id == null)
             {
                 return NotFound();
@@ -191,6 +233,11 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!UserHasPermission(2))
+            {
+                TempData["ErrorMessage"] = "You do not have permission to access that page.";
+                return RedirectToAction("Index", "Home");
+            }
             var customer = await _context.Customers.FindAsync(id);
             if (customer != null)
             {
@@ -214,9 +261,5 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CustomerExists(int id)
-        {
-            return _context.Customers.Any(e => e.Id == id);
-        }
     }
 }

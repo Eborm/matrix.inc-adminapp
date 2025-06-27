@@ -20,6 +20,17 @@ public class ProductsController : Controller
     private readonly ILogsRepository _logsRepository;
     private readonly IUserRepository _UserRepository;
 
+    private bool UserHasPermission(int requiredPermission)
+    {
+        int userId = HttpContext.Session.GetObjectFromJson<int>("User_id");
+        if (userId == 0) return false;
+        var user = _UserRepository.GetUserByUID(userId);
+        return user != null && user.Permissions <= requiredPermission;
+    }
+    private bool ProductExists(int id)
+    {
+        return _context.Products.Any(e => e.Id == id);
+    }
     public ProductsController(MatrixIncDbContext context, ILogger<ProductsController> logger, IProductRepository productRepository, ILogsRepository logsRepository, IUserRepository UserRepository)
     {
         _logger = logger;
@@ -31,6 +42,11 @@ public class ProductsController : Controller
 
     public async Task<IActionResult> Index()
     {
+        if (!UserHasPermission(1))
+        {
+            TempData["ErrorMessage"] = "You do not have permission to access that page.";
+            return RedirectToAction("Index", "Home");
+        }
         int Id = HttpContext.Session.GetObjectFromJson<int>("User_id");
         User user = null;
         if (Id != 0)
@@ -54,6 +70,11 @@ public class ProductsController : Controller
 
     public async Task<IActionResult> Details(int? id)
     {
+        if (!UserHasPermission(1))
+        {
+            TempData["ErrorMessage"] = "You do not have permission to access that page.";
+            return RedirectToAction("Index", "Home");
+        }
         if (id == null)
         {
             return NotFound();
@@ -71,6 +92,11 @@ public class ProductsController : Controller
 
     public IActionResult Create()
     {
+        if (!UserHasPermission(1))
+        {
+            TempData["ErrorMessage"] = "You do not have permission to access that page.";
+            return RedirectToAction("Index", "Home");
+        }
         return View();
     }
     
@@ -78,6 +104,11 @@ public class ProductsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Product product)
     {
+        if (!UserHasPermission(1))
+        {
+            TempData["ErrorMessage"] = "You do not have permission to access that page.";
+            return RedirectToAction("Index", "Home");
+        }
         _productRepository.AddProduct(product);
         
         int UID = HttpContext.Session.GetObjectFromJson<int>("User_id");
@@ -98,6 +129,11 @@ public class ProductsController : Controller
     
     public async Task<IActionResult> Edit(int? id)
     {
+        if (!UserHasPermission(1))
+        {
+            TempData["ErrorMessage"] = "You do not have permission to access that page.";
+            return RedirectToAction("Index", "Home");
+        }
         if (id == null)
         {
             return NotFound();
@@ -116,6 +152,11 @@ public class ProductsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, Product product)
     {
+        if (!UserHasPermission(1))
+        {
+            TempData["ErrorMessage"] = "You do not have permission to access that page.";
+            return RedirectToAction("Index", "Home");
+        }
         if (id != product.Id)
         {
             return NotFound();
@@ -162,6 +203,11 @@ public class ProductsController : Controller
 
     public async Task<IActionResult> Delete(int? id)
     {
+        if (!UserHasPermission(1))
+        {
+            TempData["ErrorMessage"] = "You do not have permission to access that page.";
+            return RedirectToAction("Index", "Home");
+        }
         if (id == null)
         {
             return NotFound();
@@ -180,7 +226,14 @@ public class ProductsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
+        if (!UserHasPermission(1))
+        {
+            TempData["ErrorMessage"] = "You do not have permission to access that page.";
+            return RedirectToAction("Index", "Home");
+        }
         var product = _productRepository.GetProductById(id);
+
+
         if (product != null)
         {
             int UID = HttpContext.Session.GetObjectFromJson<int>("User_id");
@@ -201,8 +254,4 @@ public class ProductsController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    private bool ProductExists(int id)
-    {
-        return _context.Products.Any(e => e.Id == id);
-    }
 }   
