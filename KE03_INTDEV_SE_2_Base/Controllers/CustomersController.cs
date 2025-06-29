@@ -1,4 +1,4 @@
-﻿    using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,17 +12,29 @@ using DataAccessLayer.Repositories;
 
 namespace KE03_INTDEV_SE_2_Base.Controllers
 {
+    // Controller voor het beheren van klanten in het systeem
     public class CustomersController : Controller
     {
+        // Database context voor directe database toegang
         private readonly MatrixIncDbContext _context;
+        
+        // Repository voor gebruikers-gerelateerde operaties
         private readonly IUserRepository _UserRepository;
+        
+        // Repository voor het bijhouden van logs van klantacties
         private readonly ILogsRepository _logsRepository;
+        
+        // Logger voor het bijhouden van klant-gerelateerde activiteiten
         private readonly ILogger<CustomersController> _logger;
+        
+        // Controleert of een klant bestaat in de database
         private bool CustomerExists(int id)
         {
             return _context.Customers.Any(e => e.Id == id);
         }
 
+        // Controleert of de huidige gebruiker de vereiste permissies heeft
+        // requiredPermission: 0 = admin, 1 = manager, 2 = gebruiker
         private bool UserHasPermission(int requiredPermission)
         {
             int userId = HttpContext.Session.GetObjectFromJson<int>("User_id");
@@ -30,6 +42,8 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
             var user = _UserRepository.GetUserByUID(userId);
             return user != null && user.Permissions <= requiredPermission;
         }
+        
+        // Constructor voor dependency injection van alle benodigde services
         public CustomersController(IUserRepository userRepository, MatrixIncDbContext context, ILogger<CustomersController> logger, IUserRepository UserRepository, ILogsRepository LogsRepository)
         {
             _context = context;
@@ -39,7 +53,7 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
             _UserRepository = userRepository;
         }
 
-        // GET: Customers
+        // GET: Toont een overzicht van alle klanten (alleen voor gebruikers met permissie niveau 2 of lager)
         public async Task<IActionResult> Index()
         {
             int Id = HttpContext.Session.GetObjectFromJson<int>("User_id");
@@ -62,7 +76,7 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
             }
         }
 
-        // GET: Customers/Details/5
+        // GET: Toont gedetailleerde informatie over een specifieke klant (alleen voor gebruikers met permissie niveau 2)
         public async Task<IActionResult> Details(int? id)
         {
             if (!UserHasPermission(2))
@@ -85,13 +99,13 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
             return View(customer);
         }
 
-        // GET: Customers/Create
+        // GET: Toont de pagina voor het aanmaken van een nieuwe klant
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Customers/Create
+        // POST: Verwerkt het aanmaken van een nieuwe klant
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -108,6 +122,7 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
                 _context.Add(customer);
                 await _context.SaveChangesAsync();
                 
+                // Log de actie van het aanmaken van een klant
                 int UID = HttpContext.Session.GetObjectFromJson<int>("User_id");
                 string username = _UserRepository.GetUserByUID(UID).UserName;
         
@@ -126,7 +141,7 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
             return View(customer);
         }
 
-        // GET: Customers/Edit/5
+        // GET: Toont de bewerkingspagina voor een klant (alleen voor gebruikers met permissie niveau 2)
         public async Task<IActionResult> Edit(int? id)
         {
             if (!UserHasPermission(2))
@@ -147,7 +162,7 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
             return View(customer);
         }
 
-        // POST: Customers/Edit/5
+        // POST: Verwerkt het bewerken van een klant
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -171,6 +186,7 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
                     _context.Update(customer);
                     await _context.SaveChangesAsync();
                     
+                    // Log de bewerking van de klant
                     int UID = HttpContext.Session.GetObjectFromJson<int>("User_id");
                     string username = _UserRepository.GetUserByUID(UID).UserName;
         
@@ -200,7 +216,7 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
             return View(customer);
         }
 
-        // GET: Customers/Delete/5
+        // GET: Toont de bevestigingspagina voor het verwijderen van een klant (alleen voor gebruikers met permissie niveau 2)
         public async Task<IActionResult> Delete(int? id)
         {
             if (!UserHasPermission(2))
@@ -223,7 +239,7 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
             return View(customer);
         }
 
-        // POST: Customers/Delete/5
+        // POST: Verwerkt het verwijderen van een klant
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -236,6 +252,7 @@ namespace KE03_INTDEV_SE_2_Base.Controllers
             var customer = await _context.Customers.FindAsync(id);
             if (customer != null)
             {
+                // Log de verwijdering van de klant
                 int UID = HttpContext.Session.GetObjectFromJson<int>("User_id");
                 string username = _UserRepository.GetUserByUID(UID).UserName;
         

@@ -14,25 +14,31 @@ using System.Linq.Expressions;
 
 namespace DataAccessLayer.Repositories;
 
+// Repository voor het beheren en ophalen van logregels uit de database
 public class LogsRepository : ILogsRepository
 {
+    // Database context voor toegang tot logs
     private readonly MatrixIncDbContext _context;
 
+    // Constructor voor dependency injection van de context
     public LogsRepository(MatrixIncDbContext context)
     {
         _context = context;
     }
     
+    // Haalt alle logregels op
     public IEnumerable<Log> GetAllLogs()
     {
         return _context.Logs.AsEnumerable();
     }
 
+    // Haalt logregels op basis van een ID
     public IEnumerable<Log>? GetLogByID(int id)
     {
         return _context.Logs.AsEnumerable().Where(log => log.Id == id);
     }
 
+    // Voegt een nieuwe logregel toe aan de database (asynchroon)
     public async Task AddLog(Log log)
     {
         log.City = await GetCityByIP();
@@ -41,11 +47,13 @@ public class LogsRepository : ILogsRepository
         _context.SaveChanges();
     }
 
+    // Haalt logregels op basis van een actie
     public IEnumerable<Log>? GetLogByAction(string action)
     {
         return _context.Logs.AsEnumerable().Where(log => log.Action == action);
     }
     
+    // Haalt de stad op van het huidige IP-adres via een externe API
     private static async Task<string> GetCityByIP()
     {
         string apiUrl = "https://ipwhois.app/json/";

@@ -1,25 +1,38 @@
-﻿@model DataAccessLayer.Models.User
+﻿@* Model binding voor het bewerken van een gebruiker *@
+@model DataAccessLayer.Models.User
 
 @{
+    // Titel van de gebruiker bewerken pagina
     ViewData["Title"] = "Edit";
 }
 
+@* Gebruiker bewerken pagina titel *@
 <h1>Edit User</h1>
 <hr />
+
+@* Gebruiker bewerken formulier container *@
 <div class="row">
     <div class="col-md-4">
+        @* Gebruiker bewerken formulier *@
         <form asp-action="Edit">
+            @* Validatie samenvatting *@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            @* Gebruikersnaam veld *@
             <div class="form-group">
                 <label asp-for="UserName" class="control-label"></label>
                 <input asp-for="UserName" class="form-control" type="text" />
                 <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
+            
+            @* Permissies veld *@
             <div class="form-group">
                 <label asp-for="Permissions" class="control-label"></label>
                 <input asp-for="Permissions" class="form-control" type="text" />
                 <span asp-validation-for="Permissions" class="text-danger"></span>
             </div>
+            
+            @* Bewerken opslaan knop *@
             <div class="form-group">
                 <input type="submit" value="Edit" class="btn btn-primary" />
             </div>
@@ -27,10 +40,12 @@
     </div>
 </div>
 
+@* Terug naar lijst link *@
 <div>
     <a asp-action="panel">Back to List</a>
 </div>
 
+@* Client-side validatie scripts *@
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

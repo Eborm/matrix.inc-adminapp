@@ -3,21 +3,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer
 {
+    // Database context voor de MatrixInc applicatie
+    // Bevat DbSets voor alle entiteiten en configureert de relaties
     public class MatrixIncDbContext : DbContext
     {
+        // Constructor voor dependency injection van de contextopties
         public MatrixIncDbContext(DbContextOptions<MatrixIncDbContext> options) : base(options)
         {
         }
 
+        // DbSets voor alle entiteiten in de database
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Log> Logs { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Part> Parts { get; set; }
         public DbSet<OrderRegel> OrderRegels { get; set; }
-
         public DbSet<User> Users { get; set; }
 
+        // Configureert de relaties tussen de entiteiten
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Customer>()

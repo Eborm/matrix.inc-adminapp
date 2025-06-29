@@ -1,15 +1,22 @@
-﻿@model IEnumerable<DataAccessLayer.Models.Product>
+﻿@* Model binding voor lijst van producten *@
+@model IEnumerable<DataAccessLayer.Models.Product>
 
 @{
+    // Titel van de producten overzichtspagina
     ViewData["Title"] = "Index";
 }
 
+@* Pagina hoofdtitel *@
 <h1>Product Manager</h1>
 
+@* Knop om een nieuw product aan te maken *@
 <p>
     <a asp-action="Create"><button class="btn btn-primary">Create New</button></a>
 </p>
+
+@* Tabel met alle producten *@
 <table class="table">
+    @* Tabel header met kolomnamen *@
     <thead>
     <tr>
         <th>
@@ -27,40 +34,50 @@
         <th></th>
     </tr>
     </thead>
+    @* Tabel body met productgegevens *@
     <tbody>
     @foreach (var item in Model) {
         <tr>
+            @* Product ID *@
             <td>
                 @Html.DisplayFor(modelItem => item.Id)
             </td>
+            @* Product naam *@
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
+            @* Product prijs met korting weergave *@
             <td>
                 @if (item.IsDiscountActive)
                 {
+                    @* Toon afgeprijsde prijs in rood en originele prijs doorgestreept *@
                     <span style="color: red; font-weight: bold;">@item.DiscountedPrice</span>
                     <span style="text-decoration: line-through; color: gray;">@item.Price</span>
                 }
                 else
                 {
+                    @* Toon normale prijs *@
                     @item.Price
                 }
             </td>
+            @* Korting informatie *@
             <td>
                 @if (item.IsDiscountActive)
                 {
+                    @* Toon actieve korting *@
                     <span>@item.Discount % (Korting actief!)</span>
                 }
                 else
                 {
+                    @* Geen korting actief *@
                     <span>-</span>
                 }
             </td>
+            @* Actie knoppen voor elk product *@
             <td>
-                    <a asp-action="Details" asp-route-id="@item.Id"><button class="btn btn-primary">More info</button></a>
-                    <a asp-action="Edit" asp-route-id="@item.Id"><button class="btn btn-primary">Edit</button></a>
-                    <a asp-action="Delete" asp-route-id="@item.Id"><button class="btn btn-primary">Delete</button></a>
+                <a asp-action="Details" asp-route-id="@item.Id"><button class="btn btn-primary">More info</button></a>
+                <a asp-action="Edit" asp-route-id="@item.Id"><button class="btn btn-primary">Edit</button></a>
+                <a asp-action="Delete" asp-route-id="@item.Id"><button class="btn btn-primary">Delete</button></a>
             </td>
         </tr>
     }

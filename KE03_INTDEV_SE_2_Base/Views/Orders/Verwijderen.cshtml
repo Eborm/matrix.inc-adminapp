@@ -1,23 +1,45 @@
+@* Model binding voor order verwijderen *@
 @model DataAccessLayer.Models.Order
+
 @{
+    // Titel van de order verwijderen pagina
     ViewData["Title"] = "Order verwijderen";
 }
+
+@* Order verwijderen pagina titel *@
 <h1>Order verwijderen</h1>
+
+@* Bevestigingsbericht *@
 <h4>Weet je zeker dat je deze order wilt verwijderen?</h4>
+
+@* Order informatie weergave *@
 <div>
+    @* Order details definitielijst *@
     <dl class="row">
+        @* Order ID *@
         <dt class="col-sm-2">Id</dt>
         <dd class="col-sm-10">@Model.Id</dd>
+        
+        @* Order datum *@
         <dt class="col-sm-2">Datum</dt>
         <dd class="col-sm-10">@Model.OrderDate.ToShortDateString()</dd>
+        
+        @* Klant naam *@
         <dt class="col-sm-2">Klant</dt>
         <dd class="col-sm-10">@Model.Customer?.Name</dd>
+        
+        @* Gebruiker naam *@
         <dt class="col-sm-2">Gebruiker</dt>
         <dd class="col-sm-10">@Model.User?.UserName</dd>
     </dl>
 </div>
+
+@* Order verwijderen formulier *@
 <form asp-action="Verwijderen" method="post">
+    @* Verborgen order ID veld *@
     <input type="hidden" asp-for="Id" />
+    
+    @* Formulier actie knoppen *@
     <button type="submit" class="btn btn-danger">Verwijderen</button>
     <a asp-action="Index" class="btn btn-secondary">Annuleren</a>
 </form> 

@@ -7,15 +7,19 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer
 {
+    // Klasse voor het initialiseren en vullen van de database met testdata
     public static class MatrixIncDbInitializer
     {
+        // Initialiseert de database en voegt standaarddata toe als deze nog leeg is
         public static void Initialize(MatrixIncDbContext context)
         {
+            // Controleer of er al klanten zijn, zo ja: stop
             if (context.Customers.Any())
             {
                 return;
             }
             
+            // Voeg standaard klanten toe
             var customers = new Customer[]
             {
                 new Customer { Name = "Neo", Address = "123 Elm St" , Active=true},
@@ -24,16 +28,19 @@ namespace DataAccessLayer
             };
             context.Customers.AddRange(customers);
 
+            // Voeg een standaard gebruiker toe
             var Users = new User { UserName = "Admin", Password = "A9jU6tAyZwvsi/WbeeBtCA==", Permissions=0 };
             context.Users.Add(Users);
             context.SaveChanges();
 
+            // Voeg standaard orders toe (leeg in dit voorbeeld)
             var orders = new Order[]
             {
                 
             };  
             context.Orders.AddRange(orders);
 
+            // Voeg standaard producten toe
             var products = new Product[]
             {
                 new Product { Name = "Nebuchadnezzar", Description = "Het schip waarop Neo voor het eerst de echte wereld leert kennen", Price = 10000.00m, Discount = 0.00m },
@@ -42,6 +49,7 @@ namespace DataAccessLayer
             };
             context.Products.AddRange(products);
 
+            // Voeg standaard onderdelen toe
             var parts = new Part[]
             {
                 new Part { Name = "Tandwiel", Description = "Overdracht van rotatie in bijvoorbeeld de motor of luikmechanismen"},
@@ -51,6 +59,7 @@ namespace DataAccessLayer
             };
             context.Parts.AddRange(parts);
 
+            // Voeg standaard logs toe
             var logs = new Log[]
             {
                 new Log { Action = "Edit Product", Time = DateTime.Now, City = "Utrecht", User = "Admin01"},
@@ -61,6 +70,7 @@ namespace DataAccessLayer
 
             context.SaveChanges();
 
+            // Zorg dat de database is aangemaakt
             context.Database.EnsureCreated();
         }
     }

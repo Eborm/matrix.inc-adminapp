@@ -1,28 +1,42 @@
-﻿@model DataAccessLayer.Models.Customer
+﻿@* Model binding voor het verwijderen van een klant *@
+@model DataAccessLayer.Models.Customer
 
 @{
+    // Titel van de klant verwijderen pagina
     ViewData["Title"] = "Delete";
 }
 
+@* Klant verwijderen pagina titel *@
 <h1>Delete</h1>
 
+@* Bevestigingsbericht *@
 <h3>Are you sure you want to delete this?</h3>
+
+@* Klant informatie weergave *@
 <div>
+    @* Klant sectie titel *@
     <h4>Customer</h4>
     <hr />
+    
+    @* Klant details definitielijst *@
     <dl class="row">
+        @* Klant naam *@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
+        
+        @* Klant adres *@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Address)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Address)
         </dd>
+        
+        @* Klant actief status *@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Active)
         </dt>
@@ -31,8 +45,12 @@
         </dd>
     </dl>
     
+    @* Klant verwijderen formulier *@
     <form asp-action="Delete">
+        @* Verborgen klant ID veld *@
         <input type="hidden" asp-for="Id" />
+        
+        @* Formulier actie knoppen *@
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-action="Index"><button class="btn btn-primary">return</button></a>
     </form>

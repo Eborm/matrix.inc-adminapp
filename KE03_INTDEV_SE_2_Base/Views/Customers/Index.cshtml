@@ -1,15 +1,22 @@
-﻿@model IEnumerable<DataAccessLayer.Models.Customer>
+﻿@* Model binding voor lijst van klanten *@
+@model IEnumerable<DataAccessLayer.Models.Customer>
 
 @{
+    // Titel van de klanten overzicht pagina
     ViewData["Title"] = "Index";
 }
 
+@* Klanten beheer pagina titel *@
 <h1>Customer Manager</h1>
 
+@* Nieuwe klant aanmaken knop *@
 <p>
     <a asp-action="Create"><button class="btn btn-primary">Create New</button></a>
 </p>
+
+@* Klanten overzicht tabel *@
 <table class="table">
+    @* Tabel header met kolomnamen *@
     <thead>
         <tr>
             <th>
@@ -24,24 +31,34 @@
             <th></th>
         </tr>
     </thead>
+    
+    @* Tabel body met klantgegevens *@
     <tbody>
-@foreach (var item in Model) {
+    @* Loop door alle klanten *@
+    @foreach (var item in Model) {
         <tr>
+            @* Klant naam *@
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
+            @* Klant adres *@
             <td>
                 @Html.DisplayFor(modelItem => item.Address)
             </td>
+            @* Klant actief status *@
             <td>
                 @Html.DisplayFor(modelItem => item.Active)
             </td>
+            @* Actie knoppen *@
             <td>
-                    <a asp-action="Details" asp-route-id="@item.Id"><button class="btn btn-primary">More info</button></a>
-                    <a asp-action="Edit" asp-route-id="@item.Id"><button class="btn btn-primary">Edit</button></a>
-                    <a asp-action="Delete" asp-route-id="@item.Id"><button class="btn btn-primary">Delete</button></a>
+                @* Klant details knop *@
+                <a asp-action="Details" asp-route-id="@item.Id"><button class="btn btn-primary">More info</button></a>
+                @* Klant bewerken knop *@
+                <a asp-action="Edit" asp-route-id="@item.Id"><button class="btn btn-primary">Edit</button></a>
+                @* Klant verwijderen knop *@
+                <a asp-action="Delete" asp-route-id="@item.Id"><button class="btn btn-primary">Delete</button></a>
             </td>
         </tr>
-}
+    }
     </tbody>
 </table>

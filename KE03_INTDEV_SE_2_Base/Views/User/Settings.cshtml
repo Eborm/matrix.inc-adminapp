@@ -2,25 +2,37 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    // Titel van de instellingen pagina
     ViewData["Title"] = "Settings Page";
 }
 
+@* Model binding voor wachtwoord update *@
 @model DataAccessLayer.Models.Userupdate
+
+@* Wachtwoord wijzigen formulier container *@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
+            @* Pagina titel *@
             <h2 class="mb-4 text-center">update password</h2>
+            
+            @* Wachtwoord wijzigen formulier *@
             <form asp-action="Settings" method="post">
+                @* Huidig wachtwoord veld *@
                 <div class="form-group mb-3">
                     <label asp-for="Password" class="form-label">Password</label>
                     <input asp-for="Password" class="form-control" required />
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
+                
+                @* Nieuw wachtwoord veld *@
                 <div class="form-group mb-3">
                     <label asp-for="Password_new" class="form-label">New Password</label>
                     <input asp-for="Password_new" class="form-control" required />
                     <span asp-validation-for="Password_new" class="text-danger"></span>
                 </div>
+                
+                @* Wachtwoord wijzigen knop *@
                 <div class="form-group text-center">
                     <button type="submit" class="btn btn-primary">Update password</button>
                 </div>
@@ -28,6 +40,8 @@
         </div>
     </div>
 </div>
+
+@* Client-side validatie scripts *@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

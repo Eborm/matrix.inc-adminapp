@@ -1,14 +1,24 @@
+@* Model binding voor order bewerken view model *@
 @model KE03_INTDEV_SE_2_Base.Models.OrderAanmakenViewModel
+
 @{
+    // Titel van de order bewerken pagina
     ViewData["Title"] = "Order bewerken";
 }
+
+@* Order bewerken pagina titel *@
 <h1>Order bewerken</h1>
+
+@* Order bewerken formulier *@
 <form asp-action="Bewerken" method="post">
+    @* Order datum veld *@
     <div class="form-group">
         <label asp-for="OrderDate">Datum</label>
         <input asp-for="OrderDate" class="form-control" type="date" />
         <span asp-validation-for="OrderDate" class="text-danger"></span>
     </div>
+    
+    @* Klant selectie dropdown *@
     <div class="form-group">
         <label asp-for="CustomerId">Klant</label>
         <select asp-for="CustomerId" class="form-control" asp-items="ViewBag.KlantenList">
@@ -16,6 +26,8 @@
         </select>
         <span asp-validation-for="CustomerId" class="text-danger"></span>
     </div>
+    
+    @* Gebruiker selectie dropdown *@
     <div class="form-group">
         <label asp-for="UserId">Gebruiker</label>
         <select asp-for="UserId" class="form-control" asp-items="ViewBag.GebruikersList">
@@ -23,21 +35,32 @@
         </select>
         <span asp-validation-for="UserId" class="text-danger"></span>
     </div>
+    
+    @* Producten sectie titel *@
     <h4>Producten en aantallen</h4>
+    
+    @* Producten tabel *@
     <table class="table">
+        @* Tabel header *@
         <thead>
             <tr>
                 <th>Product</th>
                 <th>Aantal</th>
             </tr>
         </thead>
+        
+        @* Tabel body met producten *@
         <tbody>
+        @* Loop door alle producten in de order *@
         @for (int i = 0; i < Model.Producten.Count; i++)
         {
             <tr>
+                @* Product naam weergave *@
                 <td>@Model.Producten[i].ProductNaam</td>
+                @* Product aantal input veld *@
                 <td>
                     <input asp-for="Producten[@i].Aantal" class="form-control" type="number" min="0" />
+                    @* Verborgen velden voor product ID en naam *@
                     <input type="hidden" asp-for="Producten[@i].ProductId" />
                     <input type="hidden" asp-for="Producten[@i].ProductNaam" />
                 </td>
@@ -45,6 +68,8 @@
         }
         </tbody>
     </table>
+    
+    @* Formulier actie knoppen *@
     <button type="submit" class="btn btn-primary">Opslaan</button>
     <a asp-action="Index" class="btn btn-secondary">Annuleren</a>
 </form> 

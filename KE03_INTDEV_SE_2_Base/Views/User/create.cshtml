@@ -2,25 +2,37 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    // Titel van de gebruiker aanmaken pagina
     ViewData["Title"] = "CreateUser Page";
 }
 
+@* Model binding voor het aanmaken van een nieuwe gebruiker *@
 @model DataAccessLayer.Models.User
+
+@* Gebruiker aanmaken formulier container *@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
+            @* Pagina titel *@
             <h2 class="mb-4 text-center">Create account</h2>
+            
+            @* Gebruiker aanmaken formulier *@
             <form asp-action="Create" method="post">
+                @* Gebruikersnaam veld *@
                 <div class="form-group mb-3">
                     <label asp-for="UserName" class="form-label">Username</label>
                     <input asp-for="UserName" class="form-control" required />
                     <span asp-validation-for="UserName" class="text-danger"></span>
                 </div>
+                
+                @* Permissies veld *@
                 <div class="form-group mb-3">
                     <label asp-for="Permissions" class="form-label">Permissions</label>
                     <input asp-for="Permissions" class="form-control" type="int" required />
                     <span asp-validation-for="Permissions" class="text-danger"></span>
                 </div>
+                
+                @* Aanmaken knop *@
                 <div class="form-group text-center">
                     <button type="submit" class="btn btn-primary">Create</button>
                 </div>
@@ -28,6 +40,8 @@
         </div>
     </div>
 </div>
+
+@* Client-side validatie scripts *@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

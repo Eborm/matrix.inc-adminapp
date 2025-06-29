@@ -1,22 +1,41 @@
+@* Model binding voor order details *@
 @model DataAccessLayer.Models.Order
+
 @{
+    // Titel van de order details pagina
     ViewData["Title"] = "Order details";
 }
+
+@* Order details pagina titel *@
 <h1>Order details</h1>
+
+@* Order details weergave *@
 <div>
+    @* Order informatie definitielijst *@
     <dl class="row">
+        @* Order ID *@
         <dt class="col-sm-2">Id</dt>
         <dd class="col-sm-10">@Model.Id</dd>
+        
+        @* Order datum *@
         <dt class="col-sm-2">Datum</dt>
         <dd class="col-sm-10">@Model.OrderDate.ToShortDateString()</dd>
+        
+        @* Klant informatie *@
         <dt class="col-sm-2">Klant</dt>
         <dd class="col-sm-10">@Model.Customer?.Name</dd>
+        
+        @* Gebruiker informatie *@
         <dt class="col-sm-2">Gebruiker</dt>
         <dd class="col-sm-10">@Model.User?.UserName</dd>
+        
+        @* Producten lijst *@
         <dt class="col-sm-2">Producten</dt>
         <dd class="col-sm-10">
+            @* Controleer of er orderregels zijn *@
             @if (Model.OrderRegels != null && Model.OrderRegels.Any())
             {
+                @* Producten lijst weergave *@
                 <ul>
                 @foreach (var regel in Model.OrderRegels)
                 {
@@ -26,13 +45,19 @@
             }
             else
             {
+                @* Geen producten bericht *@
                 <span>Geen producten</span>
             }
         </dd>
     </dl>
 </div>
+
+@* Actie knoppen *@
 <div>
+    @* Terug naar overzicht knop *@
     <a asp-action="Index" class="btn btn-secondary">Terug</a>
+    @* Order bewerken knop *@
     <a asp-action="Bewerken" asp-route-id="@Model.Id" class="btn btn-warning">Bewerken</a>
+    @* Order verwijderen knop *@
     <a asp-action="Verwijderen" asp-route-id="@Model.Id" class="btn btn-danger">Verwijderen</a>
 </div> 

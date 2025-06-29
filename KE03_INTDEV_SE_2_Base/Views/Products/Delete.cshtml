@@ -1,13 +1,18 @@
-﻿@model DataAccessLayer.Models.Product
+﻿@* Model binding voor het verwijderen van een product *@
+@model DataAccessLayer.Models.Product
 
 @{
+    // Titel van de product verwijderen pagina
     ViewData["Title"] = "Delete";
 }
 
+@* Pagina hoofdtitel *@
 <h1>Delete</h1>
 
+@* Bevestigingsvraag *@
 <h3>Are you sure you want to delete this?</h3>
 <div>
+    @* Product details overzicht *@
     <h4>Product</h4>
     <hr />
     <dl class="row">
@@ -60,6 +65,7 @@
         </dd>
     </dl>
     
+    @* Verwijder formulier met bevestigingsknop *@
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-danger" />

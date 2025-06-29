@@ -1,47 +1,59 @@
-﻿@model DataAccessLayer.Models.Product
+﻿@* Model binding voor het aanmaken van een nieuw product *@
+@model DataAccessLayer.Models.Product
 
 @{
+    // Titel van de product aanmaken pagina
     ViewData["Title"] = "Create";
 }
 
+@* Pagina hoofdtitel *@
 <h1>Create</h1>
 
+@* Subtitel *@
 <h4>Product</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
+        @* Product aanmaken formulier *@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @* Naam veld *@
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
+            @* Beschrijving veld *@
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
+            @* Prijs veld *@
             <div class="form-group">
                 <label asp-for="Price" class="control-label"></label>
                 <input asp-for="Price" class="form-control" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
+            @* Korting veld *@
             <div class="form-group">
                 <label asp-for="Discount" class="control-label"></label>
                 <input asp-for="Discount" class="form-control" />
                 <span asp-validation-for="Discount" class="text-danger"></span>
             </div>
+            @* Korting startdatum veld *@
             <div class="form-group">
                 <label asp-for="DiscountStartDate" class="control-label"></label>
                 <input asp-for="DiscountStartDate" class="form-control" type="date" />
                 <span asp-validation-for="DiscountStartDate" class="text-danger"></span>
             </div>
+            @* Korting einddatum veld *@
             <div class="form-group">
                 <label asp-for="DiscountEndDate" class="control-label"></label>
                 <input asp-for="DiscountEndDate" class="form-control" type="date" />
                 <span asp-validation-for="DiscountEndDate" class="text-danger"></span>
             </div>
+            @* Aanmaken knop *@
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -49,6 +61,7 @@
     </div>
 </div>
 
+@* Terug naar overzicht knop *@
 <div>
     <a asp-action="Index"><button class="btn btn-primary">return</button></a>
 </div>

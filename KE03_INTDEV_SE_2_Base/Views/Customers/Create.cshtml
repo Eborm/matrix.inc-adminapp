@@ -1,32 +1,48 @@
-﻿@model DataAccessLayer.Models.Customer
+﻿@* Model binding voor het aanmaken van een nieuwe klant *@
+@model DataAccessLayer.Models.Customer
 
 @{
+    // Titel van de klant aanmaken pagina
     ViewData["Title"] = "Create";
 }
 
+@* Klant aanmaken pagina titel *@
 <h1>Create</h1>
 
+@* Klant sectie titel *@
 <h4>Customer</h4>
 <hr />
+
+@* Klant aanmaken formulier container *@
 <div class="row">
     <div class="col-md-4">
+        @* Klant aanmaken formulier *@
         <form asp-action="Create">
+            @* Validatie samenvatting *@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            @* Klant naam veld *@
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
+            
+            @* Klant adres veld *@
             <div class="form-group">
                 <label asp-for="Address" class="control-label"></label>
                 <input asp-for="Address" class="form-control" />
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
+            
+            @* Klant actief status checkbox *@
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="Active" /> @Html.DisplayNameFor(model => model.Active)
                 </label>
             </div>
+            
+            @* Aanmaken opslaan knop *@
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -34,10 +50,12 @@
     </div>
 </div>
 
+@* Terug naar lijst knop *@
 <div>
     <a asp-action="Index"><button class="btn btn-primary">return</button></a>
 </div>
 
+@* Client-side validatie scripts *@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

@@ -1,149 +1,176 @@
 ﻿@{
-ViewData["Title"] = "Home Page";
+    // Titel van de pagina
+    ViewData["Title"] = "Home Page";
 }
+
+@* Toon foutmeldingen als deze aanwezig zijn *@
 @if (TempData["ErrorMessage"] != null)
 {
     <div class="alert alert-danger">
         @TempData["ErrorMessage"]
     </div>
 }
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Statistieken</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f5f5f5;
-    }
+    @* Meta tags voor responsive design en karakter encoding *@
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Statistieken</title>
+    @* Chart.js library voor grafieken *@
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @* Basis styling voor de pagina *@
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+        }
 
-    h1 {
-      text-align: center;
-      padding: 20px;
-    }
+        @* Centreren van de hoofdtitel *@
+        h1 {
+            text-align: center;
+            padding: 20px;
+        }
 
-    .chart-container {
-      display: flex;
-      justify-content: space-around;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      gap: 20px;
-      padding: 20px;
-    }
+        @* Container voor grafieken en informatieblokken *@
+        .chart-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+        }
 
-    .chart-box {
-      flex: 1 1 400px;
-      max-width: 500px;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
+        @* Styling voor grafiek containers *@
+        .chart-box {
+            flex: 1 1 400px;
+            max-width: 500px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
 
-    .info-box {
-      flex: 1 1 400px;
-      margin: 13px;
-      max-width: 500px;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      font-size: 18px;
-    }
+        @* Styling voor informatieblokken *@
+        .info-box {
+            flex: 1 1 400px;
+            margin: 13px;
+            max-width: 500px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            font-size: 18px;
+        }
 
-    canvas {
-      width: 100% !important;
-      height: auto !important;
-    }
+        @* Responsive canvas styling *@
+        canvas {
+            width: 100% !important;
+            height: auto !important;
+        }
 
-    strong {
-      color: #333;
-    }
-  </style>
+        @* Styling voor belangrijke tekst *@
+        strong {
+            color: #333;
+        }
+    </style>
 </head>
 <body>
 
+@* Hoofdtitel van het dashboard *@
 <h1>Matrix Inc. Dashboard</h1>
 
+@* Container met grafieken en statistieken *@
 <div class="chart-container">
-  <div class="chart-box">
-    <h2>Orders per month</h2>
-    <canvas id="ordersChart"></canvas>
-  </div>
-
-  <div class="info-container">
-    <div class="info-box">
-      <h2>Active Customers</h2>
-      <p id="activeUsersText">...</p>
+    @* Grafiek voor orders per maand *@
+    <div class="chart-box">
+        <h2>Orders per month</h2>
+        <canvas id="ordersChart"></canvas>
     </div>
 
-    <div class="info-box">
-      <h2>Active Discounts</h2>
-      <p id="activeDiscountText">...</p>
+    @* Container voor informatieblokken *@
+    <div class="info-container">
+        @* Blok met actieve klanten *@
+        <div class="info-box">
+            <h2>Active Customers</h2>
+            <p id="activeUsersText">...</p>
+        </div>
+
+        @* Blok met actieve kortingen *@
+        <div class="info-box">
+            <h2>Active Discounts</h2>
+            <p id="activeDiscountText">...</p>
+        </div>
     </div>
-  </div>
 </div>
 
 <script>
-  async function LoadOrdersPerMonth() {
-    const response = await fetch("/api/stats/orders-per-month");
-    const data = await response.json();
+    @* Functie om orders per maand te laden en weer te geven als grafiek *@
+    async function LoadOrdersPerMonth() {
+        const response = await fetch("/api/stats/orders-per-month");
+        const data = await response.json();
 
-    const labels = data.map(item => {
-      const date = new Date(item.year, item.month - 1);
-      return date.toLocaleString("en-EN", { month: "long", year: "numeric" });
-    });
+        @* Converteer maandnummers naar leesbare maandnamen *@
+        const labels = data.map(item => {
+            const date = new Date(item.year, item.month - 1);
+            return date.toLocaleString("en-EN", { month: "long", year: "numeric" });
+        });
 
-    const counts = data.map(item => item.count);
+        const counts = data.map(item => item.count);
 
-    new Chart(document.getElementById("ordersChart"), {
-      type: "line",
-      data: {
-        labels: labels,
-        datasets: [{
-          label: "Order amount",
-          data: counts,
-          fill: false,
-          borderColor: "blue",
-          tension: 0.3
-        }]
-      }
-    });
-  }
+        @* Maak een lijn grafiek met Chart.js *@
+        new Chart(document.getElementById("ordersChart"), {
+            type: "line",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Order amount",
+                    data: counts,
+                    fill: false,
+                    borderColor: "blue",
+                    tension: 0.3
+                }]
+            }
+        });
+    }
 
-  async function LoadActiveUsersCount() {
-    const response = await fetch('/api/stats/active-users');
-    const data = await response.json();
-    const count = data.length;
+    @* Functie om het aantal actieve klanten te laden en weer te geven *@
+    async function LoadActiveUsersCount() {
+        const response = await fetch('/api/stats/active-users');
+        const data = await response.json();
+        const count = data.length;
 
-    const text = count === 1
-      ? `Currently there is <strong>1</strong> active customer.`
-      : `Currently there are <strong>${count}</strong> active customers.`;
+        @* Toon het aantal in enkelvoud of meervoud *@
+        const text = count === 1
+            ? `Currently there is <strong>1</strong> active customer.`
+            : `Currently there are <strong>${count}</strong> active customers.`;
 
-    document.getElementById('activeUsersText').innerHTML = text;
-  }
+        document.getElementById('activeUsersText').innerHTML = text;
+    }
 
-  async function LoadActiveDiscountCount() {
-    const response = await fetch('/api/stats/check-discount');
-    const data = await response.json();
-    const discounted = data.products.filter(p => p.hasDiscount === true);
-    const count = discounted.length;
+    @* Functie om het aantal producten met actieve kortingen te laden en weer te geven *@
+    async function LoadActiveDiscountCount() {
+        const response = await fetch('/api/stats/check-discount');
+        const data = await response.json();
+        const discounted = data.products.filter(p => p.hasDiscount === true);
+        const count = discounted.length;
 
-    const text = count === 1
-      ? `Currently there is <strong>1</strong> product with an active discount.`
-      : `Currently there are <strong>${count}</strong> products with an active discount.`;
+        @* Toon het aantal in enkelvoud of meervoud *@
+        const text = count === 1
+            ? `Currently there is <strong>1</strong> product with an active discount.`
+            : `Currently there are <strong>${count}</strong> products with an active discount.`;
 
-    document.getElementById('activeDiscountText').innerHTML = text;
-  }
+        document.getElementById('activeDiscountText').innerHTML = text;
+    }
 
-  LoadOrdersPerMonth();
-  LoadActiveUsersCount();
-  LoadActiveDiscountCount();
+    @* Laad alle statistieken bij het laden van de pagina *@
+    LoadOrdersPerMonth();
+    LoadActiveUsersCount();
+    LoadActiveDiscountCount();
 </script>
 
 </body>

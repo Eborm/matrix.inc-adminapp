@@ -1,12 +1,17 @@
-﻿@model IEnumerable<DataAccessLayer.Models.Log>
+﻿@* Model binding voor lijst van logregels *@
+@model IEnumerable<DataAccessLayer.Models.Log>
 
 @{
+    // Titel van de logs overzichtspagina
     ViewData["Title"] = "Index";
 }
 
+@* Pagina hoofdtitel *@
 <h1>Logs</h1>
 
+@* Tabel met alle logregels *@
 <table class="table">
+    @* Tabel header met kolomnamen *@
     <thead>
     <tr>
         <th>
@@ -26,6 +31,7 @@
         </th>
     </tr>
     </thead>
+    @* Tabel body met loggegevens *@
     <tbody>
     @foreach (var item in Model) {
         <tr>

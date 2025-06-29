@@ -2,10 +2,14 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    // Titel van de login pagina
     ViewData["Title"] = "Login Page";
 }
 
+@* Model binding voor gebruikersinformatie *@
 @model DataAccessLayer.Models.User
+
+@* Toon validatiefouten als het model niet geldig is *@
 @if (!ViewData.ModelState.IsValid)
 {
     <div class="alert alert-danger">
@@ -15,22 +19,32 @@
         }
     </div>
 }
+
+@* Login formulier container *@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
+            @* Pagina titel *@
             <h2 class="mb-4 text-center">Login</h2>
             <p>Please give your login credentials</p>
+            
+            @* Login formulier *@
             <form asp-action="Login" method="post">
+                @* Gebruikersnaam veld *@
                 <div class="form-group mb-3">
                     <label asp-for="UserName" class="form-label">Username</label>
                     <input asp-for="UserName" class="form-control" required />
                     <span asp-validation-for="UserName" class="text-danger"></span>
                 </div>
+                
+                @* Wachtwoord veld *@
                 <div class="form-group mb-3">
                     <label asp-for="Password" class="form-label">Password</label>
                     <input asp-for="Password" class="form-control" type="password" required />
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
+                
+                @* Login knop *@
                 <div class="form-group text-center">
                     <button type="submit" class="btn btn-primary">Login</button>
                 </div>
@@ -38,6 +52,8 @@
         </div>
     </div>
 </div>
+
+@* Client-side validatie scripts *@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

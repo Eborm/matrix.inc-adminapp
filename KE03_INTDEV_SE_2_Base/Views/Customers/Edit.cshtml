@@ -1,41 +1,62 @@
-﻿@model DataAccessLayer.Models.Customer
+﻿@* Model binding voor het bewerken van een klant *@
+@model DataAccessLayer.Models.Customer
 
 @{
+    // Titel van de klant bewerken pagina
     ViewData["Title"] = "Edit";
 }
 
+@* Klant bewerken pagina titel *@
 <h1>Edit</h1>
 
+@* Klant sectie titel *@
 <h4>Customer</h4>
 <hr />
+
+@* Klant bewerken formulier container *@
 <div class="row">
     <div class="col-md-4">
+        @* Klant bewerken formulier *@
         <form asp-action="Edit">
+            @* Validatie samenvatting *@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            @* Verborgen klant ID veld *@
             <input type="hidden" asp-for="Id" />
+            
+            @* Klant naam veld *@
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
+            
+            @* Klant adres veld *@
             <div class="form-group">
                 <label asp-for="Address" class="control-label"></label>
                 <input asp-for="Address" class="form-control" />
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
+            
+            @* Klant actief status checkbox *@
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="Active" /> @Html.DisplayNameFor(model => model.Active)
                 </label>
             </div>
+            
+            @* Formulier actie knoppen *@
             <div class="form-group d-flex gap-2 mt-3">
+                @* Opslaan knop *@
                 <input type="submit" value="Save" class="btn btn-primary" />
+                @* Terug naar lijst knop *@
                 <a asp-action="Index" class="btn btn-primary">Return</a>
             </div>
         </form>
     </div>
 </div>
 
+@* Client-side validatie scripts *@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

@@ -11,15 +11,19 @@ using System.Security.Cryptography;
 
 namespace DataAccessLayer.Repositories
 {
+    // Repository voor het beheren van gebruikers in de database
     public class UserRepository : IUserRepository
     {
+        // Database context voor toegang tot gebruikers
         private readonly MatrixIncDbContext _context;
 
+        // Constructor voor dependency injection van de context
         public UserRepository(MatrixIncDbContext context)
         {
             _context = context;
         }
 
+        // Haalt een gebruiker op basis van het unieke ID
         public User GetUserByUID(int UID)
         {
             try
@@ -34,6 +38,7 @@ namespace DataAccessLayer.Repositories
             }
         }
         
+        // Haalt een gebruiker op basis van de gebruikersnaam
         public User GetUserByUserName(string userName)
         {
             try
@@ -45,6 +50,7 @@ namespace DataAccessLayer.Repositories
             catch { return null; }
         }
 
+        // Voegt een nieuwe gebruiker toe aan de database
         public void AddUser(User user)
         {
             _context.Users.Add(user);
@@ -52,6 +58,7 @@ namespace DataAccessLayer.Repositories
 
         }
 
+        // Werkt een bestaande gebruiker bij
         public void UpdateUser(User user)
         {
             _context.Users.Update(user);
@@ -59,17 +66,20 @@ namespace DataAccessLayer.Repositories
 
         }
 
+        // Verwijdert een gebruiker uit de database
         public void DeleteUser(User user)
         {
             _context.Users.Remove(user);
             _context.SaveChanges();
         }
 
+        // Haalt alle gebruikers op
         public IEnumerable<User> GetAllUsers()
         {
             return _context.Users;
         }
 
+        // Werkt de permissies van een gebruiker bij
         public void UpdateUserPermissions(int userId, int permissions)
         {
             var user = _context.Users.Find(userId);
@@ -81,6 +91,7 @@ namespace DataAccessLayer.Repositories
             _context.SaveChanges();
         }
 
+        // Versleutelt een wachtwoord voor veilige opslag
         public string EncryptPassword(string password)
         {
             byte[] bytepassword = System.Text.Encoding.UTF8.GetBytes(password);

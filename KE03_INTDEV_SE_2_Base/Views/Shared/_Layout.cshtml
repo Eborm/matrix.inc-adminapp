@@ -1,24 +1,37 @@
 ﻿<!DOCTYPE html>
+@* Bootstrap Lux thema voor een moderne uitstraling *@
 <link rel="stylesheet" href="~/css/bootstrap_lux.css" />
+@* Bootstrap Icons voor mooie iconen in de navigatie *@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 <html lang="en">
 <head>
+    @* Meta tags voor karakter encoding en responsive design *@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    @* Dynamische titel gebaseerd op ViewData *@
     <title>@ViewData["Title"] - KE03_INTDEV_SE_2_Base</title>
+    @* Bootstrap CSS framework *@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @* Custom site styling *@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @* Scoped CSS voor deze applicatie *@
     <link rel="stylesheet" href="~/KE03_INTDEV_SE_2_Base.styles.css" asp-append-version="true" />
 </head>
 <body>
+    @* Navigatie header *@
     <header>
+        @* Bootstrap navbar met donkere thema *@
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
+                @* Logo/brand naam *@
                 <a class="navbar-brand" href="/Home">MATRIX INC</a>
+                @* Hamburger menu voor mobiele weergave *@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                @* Navigatie menu items *@
                 <div class="navbar-collapse collapse" id="navbarColor01">
+                    @* Linker navigatie items *@
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <a class="nav-link" href="/Home">Home</a>
@@ -39,6 +52,7 @@
                             <a class="nav-link" href="/Logs">Logs</a>
                         </li>
                     </ul>
+                    @* Rechter navigatie items (gebruiker profiel) *@
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
                             <a class="nav-link fs-3" href="/User"><i class="bi bi-person-circle"></i></a>
@@ -48,14 +62,21 @@
             </div>
         </nav>
     </header>
+    @* Hoofdinhoud container *@
     <div class="container">
         <main role="main" class="pb-3">
+            @* Hier wordt de inhoud van individuele views gerenderd *@
             @RenderBody()
         </main>
     </div>
+    @* JavaScript libraries *@
+    @* jQuery voor DOM manipulatie *@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @* Bootstrap JavaScript voor interactieve componenten *@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @* Custom site JavaScript *@
     <script src="~/js/site.js" asp-append-version="true"></script>
+    @* Optionele scripts sectie voor individuele views *@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

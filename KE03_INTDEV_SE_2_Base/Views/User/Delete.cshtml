@@ -2,21 +2,30 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    // Titel van de gebruiker verwijderen pagina
     ViewData["Title"] = "Account deletion Page";
 }
 
+@* Model binding voor het verwijderen van een gebruiker *@
 @model DataAccessLayer.Models.User
 
+@* Gebruiker verwijderen formulier container *@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
+            @* Pagina titel *@
             <h2 class="mb-4 text-center">Delete user</h2>
+            
+            @* Gebruiker verwijderen formulier *@
             <form asp-action="Delete" method="post">
+                @* Gebruikersnaam veld (readonly voor bevestiging) *@
                 <div class="form-group mb-3">
                     <label asp-for="UserName" class="form-label">Username</label>
                     <input asp-for="UserName" value="@Model.UserName" class="form-control" required />
                     <span asp-validation-for="UserName" class="text-danger"></span>
                 </div>
+                
+                @* Verwijderen bevestigingsknop *@
                 <div class="form-group text-center">
                     <button type="submit" class="btn btn-primary">delete</button>
                 </div>
@@ -24,6 +33,8 @@
         </div>
     </div>
 </div>
+
+@* Client-side validatie scripts *@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
